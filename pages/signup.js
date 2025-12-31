@@ -45,15 +45,11 @@ export default function Signup() {
     e.preventDefault();
     const otpValue = otp.join('');
     console.log('OTP:', otpValue);
-    // TODO: Add your signup/OTP verification logic here
-    // After successful verification, redirect to home page
-    // router.push('/');
   };
 
   return (
     <div className={styles.signupContainer}>
       <div className={styles.signupCard}>
-        {/* Left Panel - Jungle Background */}
         <div className={styles.junglePanel}>
           <div className={styles.jungleBackground}></div>
           <div className={styles.jungleOverlay}></div>
@@ -70,7 +66,6 @@ export default function Signup() {
           </div>
         </div>
 
-        {/* Right Panel - Create Account */}
         <div className={styles.createAccountPanel}>
           <h2 className={styles.createAccountTitle}>Create Account</h2>
           <form onSubmit={handleSubmit} className={styles.otpForm}>

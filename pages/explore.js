@@ -86,7 +86,6 @@ export default function Explore() {
     <div className={styles.pageContainer}>
       <Navbar />
 
-      {/* Hero Section with Search */}
       <section className={styles.heroSection}>
         <Container maxWidth="lg">
           <Box sx={{ textAlign: 'center', padding: '4rem 0' }}>
@@ -119,7 +118,6 @@ export default function Explore() {
               Discover your next adventure from our curated collection
             </Typography>
 
-            {/* Search Bar */}
             <Box sx={{ maxWidth: '700px', margin: '0 auto', marginBottom: '2rem' }}>
               <TextField
                 fullWidth
@@ -148,7 +146,6 @@ export default function Explore() {
               />
             </Box>
 
-            {/* Category Tabs */}
             <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap' }}>
               <Chip
                 label="All"
@@ -223,7 +220,6 @@ export default function Explore() {
         </Container>
       </section>
 
-      {/* Results Section */}
       <section className={styles.resultsSection}>
         <Container maxWidth="xl">
           <Typography 
@@ -371,7 +367,6 @@ export default function Explore() {
         </Container>
       </section>
 
-      {/* Footer Spacing */}
       <Box sx={{ height: '4rem' }} />
     </div>
   );

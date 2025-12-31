@@ -284,9 +284,7 @@ export default function PackagePage() {
             </Card>
           </Grid>
 
-          {/* Main Content - Packages */}
           <Grid item xs={12} md={9}>
-            {/* Search Bar */}
             <Card 
               sx={{ 
                 padding: '2rem',
@@ -355,7 +353,6 @@ export default function PackagePage() {
               </Typography>
             </Card>
 
-            {/* Packages Grid */}
             <Grid container spacing={2.5}>
               {filteredPackages.map((pkg, index) => (
                 <Grid item xs={12} sm={6} md={4} key={index}>
@@ -484,7 +481,6 @@ export default function PackagePage() {
         </Grid>
       </Container>
 
-      {/* Footer Spacing */}
       <Box sx={{ height: '4rem' }} />
     </div>
   );

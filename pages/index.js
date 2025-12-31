@@ -60,7 +60,6 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Right */}
           <div className={styles.heroRight}>
             <div className={styles.logoContainer}>
               <img
@@ -72,7 +71,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ================= CATEGORIES SECTION ================= */}
         <section className={styles.categoriesSection}>
           <h2 className={styles.sectionTitle}>
             Choose Your <span className={styles.highlight}>Destination</span>
@@ -135,7 +133,6 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* Right */}
             <div className={styles.planRight}>
               <h4 className={styles.planCardTitle}>Your 3-Day Plan</h4>
 

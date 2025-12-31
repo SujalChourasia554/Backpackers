@@ -171,7 +171,6 @@ export default function Itinerary() {
       <Navbar />
 
       <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
-        {/* Hero Section */}
         <Box
           sx={{
             position: "relative",
@@ -275,17 +274,15 @@ export default function Itinerary() {
           </Box>
         </Box>
 
-        {/* Two Column Layout */}
         <Box
           sx={{
             display: "grid",
             gridTemplateColumns: { xs: "1fr", lg: "1fr 1fr" },
             gap: "24px",
             marginBottom: "40px",
-            alignItems: "stretch",
-          }}
-        >
-          {/* Left Side - What's Included */}
+          alignItems: "stretch",
+        }}
+      >
           <Card
             sx={{
               borderRadius: "24px",
@@ -400,7 +397,6 @@ export default function Itinerary() {
             </CardContent>
           </Card>
 
-          {/* Right Side - Trip Itinerary */}
           <Card
             sx={{
               borderRadius: "24px",
@@ -525,7 +521,6 @@ export default function Itinerary() {
                 ))}
               </Box>
 
-              {/* Total Budget Summary */}
               {customizedData ? (
                 <Box
                   sx={{
@@ -655,7 +650,6 @@ export default function Itinerary() {
                 </Box>
               )}
 
-              {/* Action Buttons */}
               <Box
                 sx={{
                   display: "flex",

@@ -11,15 +11,11 @@ export default function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Login:', { email, password });
-    // TODO: Add your login logic here
-    // After successful login, redirect to home page
-    // router.push('/');
   };
 
   return (
     <div className={styles.loginContainer}>
       <div className={styles.loginCard}>
-        {/* Left Panel - Sign In */}
         <div className={styles.signinPanel}>
           <h1 className={styles.signinTitle}>Sign In</h1>
           <form onSubmit={handleSubmit} className={styles.signinForm}>
@@ -48,7 +44,6 @@ export default function Login() {
           </form>
         </div>
 
-        {/* Right Panel - Welcome Back */}
         <div className={styles.welcomePanel}>
           <div className={styles.orangeCurve}></div>
           <div className={styles.welcomeContent}>

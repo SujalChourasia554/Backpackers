@@ -176,7 +176,6 @@ export default function CustomizePage() {
       <Navbar />
 
       <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1, paddingBottom: "60px" }}>
-        {/* Header */}
         <Box sx={{ display: "flex", alignItems: "center", marginBottom: "32px" }}>
           <IconButton
             onClick={() => router.push(`/${packageId}`)}
@@ -200,7 +199,6 @@ export default function CustomizePage() {
           </Typography>
         </Box>
 
-        {/* Budget Summary */}
         <Card
           sx={{
             marginBottom: "32px",
@@ -238,7 +236,6 @@ export default function CustomizePage() {
           </CardContent>
         </Card>
 
-        {/* Hotel Selection */}
         <Card sx={{ marginBottom: "32px", borderRadius: "24px", boxShadow: "0 12px 40px rgba(30, 58, 95, 0.15)" }}>
           <CardContent sx={{ padding: "28px !important" }}>
             <Typography
@@ -345,7 +342,6 @@ export default function CustomizePage() {
           </CardContent>
         </Card>
 
-        {/* Restaurant Selection */}
         <Card sx={{ marginBottom: "32px", borderRadius: "24px", boxShadow: "0 12px 40px rgba(30, 58, 95, 0.15)" }}>
           <CardContent sx={{ padding: "28px !important" }}>
             <Typography
@@ -452,7 +448,6 @@ export default function CustomizePage() {
           </CardContent>
         </Card>
 
-        {/* Trip Itinerary Customization */}
         {customizedItinerary && (
           <Card sx={{ marginBottom: "32px", borderRadius: "24px", boxShadow: "0 12px 40px rgba(30, 58, 95, 0.15)" }}>
             <CardContent sx={{ padding: "28px !important" }}>
@@ -536,7 +531,6 @@ export default function CustomizePage() {
           </Card>
         )}
 
-        {/* Save Button */}
         <Box sx={{ display: "flex", gap: "16px", justifyContent: "center", marginTop: "32px" }}>
           <Button
             variant="outlined"

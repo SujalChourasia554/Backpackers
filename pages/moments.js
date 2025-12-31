@@ -190,7 +190,6 @@ export default function Moments() {
     <div className={styles.pageContainer}>
       <Navbar />
 
-      {/* Hero Section */}
       <section className={styles.heroSection}>
         <Container maxWidth="lg">
           <Box sx={{ textAlign: 'center', padding: '4rem 0 2rem' }}>
@@ -242,7 +241,6 @@ export default function Moments() {
         </Container>
       </section>
 
-      {/* Reels Grid */}
       <section className={styles.reelsSection}>
         <Container maxWidth="xl">
           <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '2rem', gap: 2 }}>
@@ -277,9 +275,8 @@ export default function Moments() {
                     position: 'relative',
                     height: '500px'
                   }}
-                >
-                  {/* Video Container */}
-                  <Box 
+                  >
+                    <Box
                     sx={{ 
                       position: 'relative',
                       height: '100%',
@@ -352,7 +349,6 @@ export default function Moments() {
                         </Typography>
                       </Box>
 
-                      {/* Title */}
                       <Typography 
                         variant="h6" 
                         sx={{
@@ -431,7 +427,6 @@ export default function Moments() {
         </Container>
       </section>
 
-      {/* Upload Dialog */}
       <Dialog 
         open={openUploadDialog} 
         onClose={() => setOpenUploadDialog(false)}
@@ -502,7 +497,6 @@ export default function Moments() {
         </DialogActions>
       </Dialog>
 
-      {/* Footer Spacing */}
       <Box sx={{ height: '4rem' }} />
     </div>
   );
