@@ -1,0 +1,80 @@
+.pageContainer {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #f0f4f8 0%, #ffffff 100%);
+}
+
+/* ================= HERO SECTION ================= */
+.heroSection {
+  padding: 8rem 0 2rem;
+  background-image: url('https://images.unsplash.com/photo-1530789253388-582c481c54b0?w=1920&h=1080&fit=crop&q=80');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  position: relative;
+}
+
+.heroSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 244, 248, 0.92) 100%);
+  z-index: 1;
+}
+
+.heroSection > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* ================= REELS SECTION ================= */
+.reelsSection {
+  padding: 4rem 0 6rem;
+}
+
+.reelCard {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.reelCard:hover .playButton {
+  transform: scale(1.1);
+}
+
+/* ================= ANIMATIONS ================= */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .heroSection {
+    padding: 6rem 0 2rem;
+  }
+
+  .reelsSection {
+    padding: 3rem 0 4rem;
+  }
+
+  .reelCard {
+    height: 450px !important;
+  }
+}
+
