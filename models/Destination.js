@@ -17,6 +17,15 @@ const destinationsSchema = new Schema({
         longitude: { type: Number },
         timezone: { type: String }
     },
+    rating: {
+        type: Number,
+        min: 0,
+        max: 5,
+        default: 0
+    },
+    totalReviews: { type: Number, default: 0 },
+    minBudget: { type: Number },
+    maxBudget: { type: Number },
     // rating: {
     //     type: Number,
     //     min: 0,
@@ -27,6 +36,6 @@ const destinationsSchema = new Schema({
     // totalStays: { type: Number, default: 0 },
     // totalFoodSpots: { type: Number, default: 0 },
     // totalLocalGems: { type: Number, default: 0 },
-})
+});
 
 mongoose.model("destinations", destinationsSchema);

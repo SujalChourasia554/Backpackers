@@ -22,11 +22,8 @@ mongoose
 const port = process.env.PORT || 5001;
 
 require("./models/Destination");
-require("./models/FoodSpot");
-require("./models/LocalGem");
-require("./models/Stay");
+require("./models/DestinationItem");
 require("./models/User");
-require("./models/Activity");
 require("./models/Package");
 require("./models/Itinerary");
 require("./models/Booking");

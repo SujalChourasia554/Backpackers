@@ -4,9 +4,7 @@ const mongoose = require("mongoose");
 const router = express.Router();
 
 const Destination = mongoose.model("destinations");
-const FoodSpot = mongoose.model("foodspots");
-const LocalGem = mongoose.model("localgems");
-const Stay = mongoose.model("stays");
+const DestinationItem = mongoose.model("destinationitems");
 
 const VALID_CATEGORIES = ["Beach", "Mountains & Outdoors", "Culture & Heritage"];
 const isValidObjectId = (id) => mongoose.Types.ObjectId.isValid(id);
@@ -66,15 +64,16 @@ router.get("/api/v1/destination/:id", async (req, res) => {
       return res.status(404).json({ message: "Destination not found" });
     }
 
-    const [stays, foodSpots, localGems] = await Promise.all([
-      Stay.find({ destinationId: id }).lean(),
-      FoodSpot.find({ destinationId: id }).lean(),
-      LocalGem.find({ destinationId: id }).lean()
+    const [stays, foodSpots, localGems, activities] = await Promise.all([
+      DestinationItem.find({ destinationId: id, itemType: "stay" }).lean(),
+      DestinationItem.find({ destinationId: id, itemType: "foodspot" }).lean(),
+      DestinationItem.find({ destinationId: id, itemType: "localgem" }).lean(),
+      DestinationItem.find({ destinationId: id, itemType: "activity" }).lean()
     ]);
 
     res.status(200).json({
       message: "OK",
-      response: { ...destination, stays, foodSpots, localGems }
+      response: { ...destination, stays, foodSpots, localGems, activities }
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -94,7 +93,7 @@ router.get("/api/v1/destination/:id/stays", async (req, res) => {
       return res.status(400).json({ message: "Invalid destination id" });
     }
 
-    const filter = { destinationId: id };
+    const filter = { destinationId: id, itemType: "stay" };
     
     // Price filtering
     if (minPrice || maxPrice) {
@@ -110,7 +109,7 @@ router.get("/api/v1/destination/:id/stays", async (req, res) => {
     else if (sortBy === "rating") sort = { rating: -1 };
     else sort = { price: 1 }; // default: price ascending
 
-    const stays = await Stay.find(filter).sort(sort).lean();
+    const stays = await DestinationItem.find(filter).sort(sort).lean();
 
     res.status(200).json({
       message: "OK",
@@ -135,7 +134,7 @@ router.get("/api/v1/destination/:id/foodspots", async (req, res) => {
       return res.status(400).json({ message: "Invalid destination id" });
     }
 
-    const filter = { destinationId: id };
+    const filter = { destinationId: id, itemType: "foodspot" };
     
     // Price filtering
     if (minPrice || maxPrice) {
@@ -151,7 +150,7 @@ router.get("/api/v1/destination/:id/foodspots", async (req, res) => {
     else if (sortBy === "rating") sort = { rating: -1 };
     else sort = { price: 1 }; // default: price ascending
 
-    const foodSpots = await FoodSpot.find(filter).sort(sort).lean();
+    const foodSpots = await DestinationItem.find(filter).sort(sort).lean();
 
     res.status(200).json({
       message: "OK",
@@ -176,7 +175,7 @@ router.get("/api/v1/destination/:id/localgems", async (req, res) => {
       return res.status(400).json({ message: "Invalid destination id" });
     }
 
-    const filter = { destinationId: id };
+    const filter = { destinationId: id, itemType: "localgem" };
 
     // Sorting
     let sort = {};
@@ -184,7 +183,7 @@ router.get("/api/v1/destination/:id/localgems", async (req, res) => {
     else if (sortBy === "name") sort = { name: 1 };
     else sort = { name: 1 }; // default: name ascending
 
-    const localGems = await LocalGem.find(filter).sort(sort).lean();
+    const localGems = await DestinationItem.find(filter).sort(sort).lean();
 
     res.status(200).json({
       message: "OK",
@@ -229,10 +228,10 @@ router.get("/api/v1/destination/:id/recommendations", async (req, res) => {
     const foodBudget = budgetPerDay * foodFactor;
 
     const [stays, foodSpots] = await Promise.all([
-      Stay.find({ destinationId: id, price: { $lte: stayBudget } })
+      DestinationItem.find({ destinationId: id, itemType: "stay", price: { $lte: stayBudget } })
         .sort({ price: 1 })
         .lean(),
-      FoodSpot.find({ destinationId: id }).sort({ price: 1 }).lean()
+      DestinationItem.find({ destinationId: id, itemType: "foodspot" }).sort({ price: 1 }).lean()
     ]);
 
     const foodUnderBudget = foodSpots.filter(
@@ -251,6 +250,40 @@ router.get("/api/v1/destination/:id/recommendations", async (req, res) => {
       },
       stays,
       foodSpots: foodUnderBudget
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// -------------------------------
+// GET all activities for a destination (for customization)
+// Query params: sortBy (rating, name, price)
+// -------------------------------
+router.get("/api/v1/destination/:id/activities", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { sortBy } = req.query;
+
+    if (!isValidObjectId(id)) {
+      return res.status(400).json({ message: "Invalid destination id" });
+    }
+
+    const filter = { destinationId: id, itemType: "activity" };
+
+    // Sorting
+    let sort = {};
+    if (sortBy === "rating") sort = { rating: -1 };
+    else if (sortBy === "name") sort = { name: 1 };
+    else if (sortBy === "price") sort = { price: 1 };
+    else sort = { name: 1 }; // default: name ascending
+
+    const activities = await DestinationItem.find(filter).sort(sort).lean();
+
+    res.status(200).json({
+      message: "OK",
+      count: activities.length,
+      response: activities
     });
   } catch (err) {
     res.status(500).json({ message: err.message });

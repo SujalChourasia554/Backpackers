@@ -5,10 +5,7 @@ const router = express.Router();
 
 const Package = mongoose.model("packages");
 const Destination = mongoose.model("destinations");
-const Stay = mongoose.model("stays");
-const FoodSpot = mongoose.model("foodspots");
-const LocalGem = mongoose.model("localgems");
-const Activity = mongoose.model("activities");
+const DestinationItem = mongoose.model("destinationitems");
 
 const isValidObjectId = (id) => mongoose.Types.ObjectId.isValid(id);
 
@@ -75,30 +72,23 @@ router.get("/api/v1/packages/:id", async (req, res) => {
       return res.status(404).json({ message: "Package not found" });
     }
 
-    // Get all related items
-    const [stay, foodSpots, localGems, activities] = await Promise.all([
-      packageData.defaultStayId 
-        ? Stay.findById(packageData.defaultStayId).lean() 
-        : null,
-      packageData.defaultFoodSpotIds.length > 0
-        ? FoodSpot.find({ _id: { $in: packageData.defaultFoodSpotIds } }).lean()
-        : [],
-      packageData.defaultLocalGemIds.length > 0
-        ? LocalGem.find({ _id: { $in: packageData.defaultLocalGemIds } }).lean()
-        : [],
-      packageData.defaultActivityIds.length > 0
-        ? Activity.find({ _id: { $in: packageData.defaultActivityIds } }).lean()
-        : []
-    ]);
+    // Get all related items grouped by type
+    const itemIds = packageData.defaultItemIds.map(item => item.itemId);
+    const allItems = await DestinationItem.find({ _id: { $in: itemIds } }).lean();
+    
+    // Group items by type
+    const defaultItems = {
+      stays: allItems.filter(item => item.itemType === "stay"),
+      foodSpots: allItems.filter(item => item.itemType === "foodspot"),
+      localGems: allItems.filter(item => item.itemType === "localgem"),
+      activities: allItems.filter(item => item.itemType === "activity")
+    };
 
     res.status(200).json({
       message: "OK",
       response: {
         ...packageData,
-        defaultStay: stay,
-        defaultFoodSpots: foodSpots,
-        defaultLocalGems: localGems,
-        defaultActivities: activities
+        defaultItems
       }
     });
   } catch (err) {
