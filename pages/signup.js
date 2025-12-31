@@ -1,8 +1,7 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import styles from '@/styles/Signup.module.css';
-import theme from '@/src/theme';
 
 export default function Signup() {
   const router = useRouter();
@@ -46,7 +45,9 @@ export default function Signup() {
     e.preventDefault();
     const otpValue = otp.join('');
     console.log('OTP:', otpValue);
-    // Add your signup logic here
+    // TODO: Add your signup/OTP verification logic here
+    // After successful verification, redirect to home page
+    // router.push('/');
   };
 
   return (

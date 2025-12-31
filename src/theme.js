@@ -34,15 +34,24 @@ const theme = {
     // Common Colors
     text: {
       primary: '#171717',      // Almost black
-      secondary: '#666666',    // Gray
+      secondary: '#ffffff',    // White (for dark backgrounds)
       light: '#999999',        // Light gray
       white: '#ffffff',        // Pure white
+      muted: '#666666',        // Muted gray
     },
     
     background: {
       primary: '#ffffff',      // White
       secondary: '#f9f9f9',    // Off white
       dark: '#0f1a24',         // Dark blue-black
+      main: '#ffffff',         // Main background
+    },
+    
+    primary: {
+      main: '#4b8ca8',         // Main primary color
+      light: '#6ba3bd',        // Light primary
+      dark: '#3a7a8f',         // Dark primary
+      gradient: 'linear-gradient(135deg, #4b8ca8 0%, #3a7a8f 100%)',
     },
     
     status: {
@@ -61,6 +70,22 @@ const theme = {
   
   // Typography
   typography: {
+    fontFamily: {
+      primary: "'Poppins', 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif",
+      secondary: "'Inter', 'Arial', sans-serif",
+      heading: "'Montserrat', 'Poppins', sans-serif",
+    },
+  },
+  
+  // Fonts (alias for compatibility)
+  fonts: {
+    primary: "'Poppins', 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif",
+    secondary: "'Inter', 'Arial', sans-serif",
+    heading: "'Montserrat', 'Poppins', sans-serif",
+  },
+  
+  // Original typography object
+  typographyOld: {
     fontFamily: {
       primary: "'Poppins', 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif",
       secondary: "'Inter', 'Arial', sans-serif",

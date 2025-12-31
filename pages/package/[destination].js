@@ -360,6 +360,17 @@ export default function PackagePage() {
               {filteredPackages.map((pkg, index) => (
                 <Grid item xs={12} sm={6} md={4} key={index}>
                   <Card 
+                    onClick={() => {
+                      // Map destination name to package ID
+                      const packageMap = {
+                        'goa': 'goa',
+                        'goa beaches': 'goa',
+                        'manali': 'manali',
+                        'hampi': 'hampi'
+                      };
+                      const packageId = packageMap[destinationName.toLowerCase()] || 'goa';
+                      router.push(`/${packageId}`);
+                    }}
                     sx={{
                       borderRadius: '16px',
                       overflow: 'hidden',

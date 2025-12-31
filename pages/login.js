@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import styles from '@/styles/Login.module.css';
-import theme from '@/src/theme';
 
 export default function Login() {
   const router = useRouter();
@@ -12,7 +11,9 @@ export default function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Login:', { email, password });
-    // Add your login logic here
+    // TODO: Add your login logic here
+    // After successful login, redirect to home page
+    // router.push('/');
   };
 
   return (

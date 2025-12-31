@@ -113,7 +113,7 @@ export default function Beaches() {
               className={styles.sectionTitle}
               sx={{
                 fontFamily: theme.typography.fontFamily.primary,
-                fontWeight: theme.typography.fontWeight.bold,
+                fontWeight: 700,
                 color: theme.colors.beaches.primary,
                 marginBottom: '1rem'
               }}
@@ -218,7 +218,7 @@ export default function Beaches() {
               className={styles.bookTitle}
               sx={{
                 fontFamily: theme.typography.fontFamily.primary,
-                fontWeight: theme.typography.fontWeight.bold,
+                fontWeight: 700,
                 color: 'white',
                 marginBottom: '1rem'
               }}
@@ -269,7 +269,7 @@ export default function Beaches() {
             className={styles.reasonsTitle}
             sx={{
               fontFamily: theme.typography.fontFamily.primary,
-              fontWeight: theme.typography.fontWeight.bold,
+              fontWeight: 700,
               color: theme.colors.beaches.primary,
               textAlign: 'center',
               marginBottom: '3rem'
