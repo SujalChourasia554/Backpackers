@@ -25,7 +25,6 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import ShareIcon from '@mui/icons-material/Share';
 import AddIcon from '@mui/icons-material/Add';
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
-import styles from '@/styles/Moments.module.css';
 import theme from '@/src/theme';
 
 export default function Moments() {
@@ -187,10 +186,10 @@ export default function Moments() {
   };
 
   return (
-    <div className={styles.pageContainer}>
+    <Box>
       <Navbar />
 
-      <section className={styles.heroSection}>
+      <Box component="section">
         <Container maxWidth="lg">
           <Box sx={{ textAlign: 'center', padding: '4rem 0 2rem' }}>
             <Typography 
@@ -239,9 +238,9 @@ export default function Moments() {
             </Button>
           </Box>
         </Container>
-      </section>
+      </Box>
 
-      <section className={styles.reelsSection}>
+      <Box component="section">
         <Container maxWidth="xl">
           <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '2rem', gap: 2 }}>
             <VideoLibraryIcon sx={{ fontSize: 32, color: theme.colors.brand.primary }} />
@@ -260,7 +259,6 @@ export default function Moments() {
             {travelReels.map((reel) => (
               <Grid item xs={12} sm={6} md={4} lg={3} key={reel.id}>
                 <Card 
-                  className={styles.reelCard}
                   onMouseEnter={() => handleVideoHover(reel.id, true)}
                   onMouseLeave={() => handleVideoHover(reel.id, false)}
                   sx={{
@@ -425,7 +423,7 @@ export default function Moments() {
             ))}
           </Grid>
         </Container>
-      </section>
+      </Box>
 
       <Dialog 
         open={openUploadDialog} 
@@ -498,7 +496,7 @@ export default function Moments() {
       </Dialog>
 
       <Box sx={{ height: '4rem' }} />
-    </div>
+    </Box>
   );
 }
 

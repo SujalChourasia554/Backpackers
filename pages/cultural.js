@@ -2,10 +2,44 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Navbar from "@/Components/Navbar";
 import { Button, Card, CardContent, CardMedia, Typography, Box, Container, Grid } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import TempleHinduIcon from '@mui/icons-material/TempleHindu';
-import styles from '@/styles/Cultural.module.css';
 import theme from '@/src/theme';
+
+const HeroSection = styled(Box)({
+  position: 'relative',
+  height: '70vh',
+  minHeight: '500px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
+  backgroundAttachment: 'fixed',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: 'linear-gradient(135deg, rgba(139, 69, 19, 0.7) 0%, rgba(210, 105, 30, 0.5) 100%)',
+  },
+});
+
+const ReasonCard = styled(Box)({
+  textAlign: 'center',
+  padding: '2rem',
+  borderRadius: '16px',
+  background: 'var(--card-bg)',
+  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+  transition: 'all 0.3s ease',
+  '&:hover': {
+    transform: 'translateY(-8px)',
+    boxShadow: '0 8px 30px rgba(139, 69, 19, 0.2)',
+  },
+});
 
 export default function Cultural() {
   const [hoveredCard, setHoveredCard] = useState(null);
@@ -13,79 +47,88 @@ export default function Cultural() {
 
   const culturalDestinations = [
     {
-      name: "Jaipur",
-      location: "Rajasthan, India",
-      description: "Pink City with magnificent forts and palaces",
-      price: "₹2500",
-      image: "https://images.unsplash.com/photo-1477587458883-47145ed94245?w=800&h=600&fit=crop&q=80",
-      rating: 4.8
+      name: "Hampi",
+      location: "Karnataka, India",
+      description: "Ancient ruins and UNESCO World Heritage Site",
+      image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&h=600&fit=crop&q=80",
     },
     {
       name: "Varanasi",
       location: "Uttar Pradesh, India",
-      description: "Ancient spiritual city on the banks of Ganges",
-      price: "₹2000",
+      description: "Spiritual capital and oldest living city",
       image: "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?w=800&h=600&fit=crop&q=80",
-      rating: 4.9
     },
     {
-      name: "Hampi",
-      location: "Karnataka, India",
-      description: "UNESCO World Heritage Site with ancient ruins",
-      price: "₹1800",
+      name: "Jaipur",
+      location: "Rajasthan, India",
+      description: "Pink City with royal palaces and forts",
+      image: "https://images.unsplash.com/photo-1599661046289-e31897846e41?w=800&h=600&fit=crop&q=80",
+    },
+    {
+      name: "Khajuraho",
+      location: "Madhya Pradesh, India",
+      description: "Exquisite temple architecture and sculptures",
+      image: "https://images.unsplash.com/photo-1587474260584-136574528ed5?w=800&h=600&fit=crop&q=80",
+    },
+    {
+      name: "Ajanta & Ellora",
+      location: "Maharashtra, India",
+      description: "Ancient rock-cut caves and Buddhist art",
       image: "https://images.unsplash.com/photo-1609137144813-7d9921338f24?w=800&h=600&fit=crop&q=80",
-      rating: 4.8
-    },
-    {
-      name: "Agra",
-      location: "Uttar Pradesh, India",
-      description: "Home to the magnificent Taj Mahal",
-      price: "₹2200",
-      image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&h=600&fit=crop&q=80",
-      rating: 4.9
     },
     {
       name: "Mysore",
       location: "Karnataka, India",
-      description: "City of Palaces with rich cultural heritage",
-      price: "₹2100",
-      image: "https://images.unsplash.com/photo-1598977123118-4e30ba3c4f5b?w=800&h=600&fit=crop&q=80",
-      rating: 4.7
-    },
-    {
-      name: "Udaipur",
-      location: "Rajasthan, India",
-      description: "City of Lakes with romantic palaces",
-      price: "₹2600",
-      image: "https://images.unsplash.com/photo-1599661046289-e31897846e41?w=800&h=600&fit=crop&q=80",
-      rating: 4.8
+      description: "Royal heritage and magnificent palaces",
+      image: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=800&h=600&fit=crop&q=80",
     }
   ];
 
   return (
-    <div className={styles.pageContainer}>
+    <Box sx={{ minHeight: '100vh', background: 'var(--background)' }}>
       <Navbar />
 
-      {/* Hero Section */}
-      <section 
-        className={styles.heroSection}
-        style={{
+      <HeroSection
+        sx={{
           backgroundImage: 'url(https://images.unsplash.com/photo-1564507592333-c60657eea523?w=1920&h=1080&fit=crop&q=80)'
         }}
       >
-        <div className={styles.heroOverlay} />
-        <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>CULTURAL & HERITAGE</h1>
-          <p className={styles.heroSubtitle}>
+        <Box sx={{ position: 'relative', zIndex: 1, textAlign: 'center', color: 'white' }}>
+          <Typography
+            variant="h1"
+            sx={{
+              fontSize: { xs: '2.5rem', md: '5rem' },
+              fontWeight: 700,
+              mb: 2,
+              textShadow: '2px 2px 8px rgba(0, 0, 0, 0.3)',
+            }}
+          >
+            CULTURAL & HERITAGE
+          </Typography>
+          <Typography
+            variant="h4"
+            sx={{
+              fontSize: { xs: '1.5rem', md: '2rem' },
+              fontWeight: 500,
+              mb: 1,
+              textShadow: '1px 1px 4px rgba(0, 0, 0, 0.3)',
+            }}
+          >
             Journey Through Time
-          </p>
-          <p className={styles.heroDescription}>
-            Experience the richness of history and traditions
-          </p>
+          </Typography>
+          <Typography
+            variant="body1"
+            sx={{
+              fontSize: { xs: '1rem', md: '1.2rem' },
+              mb: 4,
+              opacity: 0.95,
+            }}
+          >
+            Discover the rich tapestry of history and tradition
+          </Typography>
           <Button 
             variant="contained"
             endIcon={<ArrowForwardIcon />}
-            className={styles.heroButton}
             sx={{
               backgroundColor: theme.colors.cultural.primary,
               padding: '12px 32px',
@@ -93,50 +136,49 @@ export default function Cultural() {
               fontWeight: 600,
               borderRadius: '50px',
               textTransform: 'none',
+              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
               '&:hover': {
                 backgroundColor: theme.colors.cultural.dark,
                 transform: 'scale(1.05)',
+                boxShadow: '0 6px 20px rgba(0, 0, 0, 0.3)',
               }
             }}
           >
             Explore Heritage
           </Button>
-        </div>
-      </section>
+        </Box>
+      </HeroSection>
 
-      {/* Destinations Grid Section */}
-      <section className={styles.destinationsSection}>
+      <Box sx={{ py: 8, background: 'var(--background)' }}>
         <Container maxWidth="xl">
-          <div className={styles.sectionHeader}>
+          <Box sx={{ textAlign: 'center', mb: 6 }}>
             <Typography 
               variant="h3" 
-              className={styles.sectionTitle}
               sx={{
                 fontFamily: theme.typography.fontFamily.primary,
                 fontWeight: 700,
                 color: theme.colors.cultural.primary,
-                marginBottom: '1rem'
+                mb: 2,
+                fontSize: { xs: '2rem', md: '2.5rem' },
               }}
             >
-              Popular Cultural & Heritage Sites
+              Popular Cultural Destinations
             </Typography>
             <Typography 
               variant="body1" 
-              className={styles.sectionSubtitle}
               sx={{
-                color: theme.colors.text.secondary,
+                color: 'var(--text-secondary)',
                 fontSize: '1.1rem'
               }}
             >
-              Discover ancient monuments, temples, and architectural marvels
+              Experience rich history and traditions around the world
             </Typography>
-          </div>
+          </Box>
 
-          <Grid container spacing={4} className={styles.destinationsGrid}>
+          <Grid container spacing={4}>
             {culturalDestinations.map((destination, index) => (
               <Grid item xs={12} sm={6} md={4} key={index}>
                 <Card 
-                  className={styles.destinationCard}
                   onMouseEnter={() => setHoveredCard(index)}
                   onMouseLeave={() => setHoveredCard(null)}
                   onClick={() => router.push(`/package/${destination.name.toLowerCase().replace(/\s+/g, '-')}?category=cultural`)}
@@ -150,12 +192,12 @@ export default function Cultural() {
                       ? '0 20px 40px rgba(139, 69, 19, 0.3)' 
                       : '0 4px 20px rgba(0, 0, 0, 0.1)',
                     cursor: 'pointer',
+                    background: 'var(--card-bg)',
                   }}
                 >
-                  <div className={styles.cardImageWrapper}>
+                  <Box sx={{ position: 'relative', overflow: 'hidden' }}>
                     <CardMedia
                       component="div"
-                      className={styles.cardImage}
                       sx={{
                         height: 250,
                         backgroundImage: `url(${destination.image})`,
@@ -165,18 +207,31 @@ export default function Cultural() {
                         transform: hoveredCard === index ? 'scale(1.1)' : 'scale(1)',
                       }}
                     />
-                    <div className={styles.cardOverlay}>
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.3) 100%)',
+                        display: 'flex',
+                        alignItems: 'flex-end',
+                        justifyContent: 'center',
+                        pb: 2,
+                      }}
+                    >
                       <TempleHinduIcon sx={{ fontSize: 40, color: 'white', opacity: 0.9 }} />
-                    </div>
-                  </div>
+                    </Box>
+                  </Box>
                   <CardContent sx={{ padding: '1.5rem' }}>
                     <Typography 
                       variant="h5" 
                       component="h3"
                       sx={{
                         fontWeight: 700,
-                        marginBottom: '0.5rem',
-                        color: theme.colors.text.primary,
+                        mb: 0.5,
+                        color: 'var(--text-primary)',
                         fontFamily: theme.typography.fontFamily.primary
                       }}
                     >
@@ -186,7 +241,7 @@ export default function Cultural() {
                       variant="body2" 
                       sx={{
                         color: theme.colors.cultural.primary,
-                        marginBottom: '0.75rem',
+                        mb: 1,
                         fontWeight: 500
                       }}
                     >
@@ -195,7 +250,7 @@ export default function Cultural() {
                     <Typography 
                       variant="body2" 
                       sx={{
-                        color: theme.colors.text.secondary,
+                        color: 'var(--text-secondary)',
                         lineHeight: 1.6
                       }}
                     >
@@ -207,39 +262,41 @@ export default function Cultural() {
             ))}
           </Grid>
         </Container>
-      </section>
+      </Box>
 
-      {/* Book Now Section */}
-      <section className={styles.bookSection}>
+      <Box
+        sx={{
+          py: 8,
+          background: `linear-gradient(135deg, ${theme.colors.cultural.primary} 0%, ${theme.colors.cultural.dark} 100%)`,
+        }}
+      >
         <Container maxWidth="md">
-          <Box className={styles.bookContainer}>
+          <Box sx={{ textAlign: 'center' }}>
             <Typography 
               variant="h3" 
-              className={styles.bookTitle}
               sx={{
                 fontFamily: theme.typography.fontFamily.primary,
                 fontWeight: 700,
                 color: 'white',
-                marginBottom: '1rem'
+                mb: 2,
+                fontSize: { xs: '2rem', md: '2.5rem' },
               }}
             >
-              Ready to Explore History?
+              Ready for Your Cultural Journey?
             </Typography>
             <Typography 
               variant="body1" 
-              className={styles.bookDescription}
               sx={{
                 color: 'rgba(255, 255, 255, 0.9)',
-                marginBottom: '2rem',
+                mb: 4,
                 fontSize: '1.1rem'
               }}
             >
-              Book your cultural journey today and immerse yourself in rich traditions
+              Book your dream heritage vacation today and create unforgettable memories
             </Typography>
             <Button 
               variant="contained"
               size="large"
-              className={styles.bookButton}
               sx={{
                 backgroundColor: 'white',
                 color: theme.colors.cultural.primary,
@@ -248,10 +305,12 @@ export default function Cultural() {
                 fontWeight: 700,
                 borderRadius: '50px',
                 textTransform: 'none',
+                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
                 '&:hover': {
                   backgroundColor: theme.colors.cultural.accent,
                   color: theme.colors.cultural.dark,
                   transform: 'scale(1.05)',
+                  boxShadow: '0 6px 20px rgba(0, 0, 0, 0.3)',
                 }
               }}
             >
@@ -259,20 +318,19 @@ export default function Cultural() {
             </Button>
           </Box>
         </Container>
-      </section>
+      </Box>
 
-      {/* Reasons Section */}
-      <section className={styles.reasonsSection}>
+      <Box sx={{ py: 8, background: 'var(--background)' }}>
         <Container maxWidth="lg">
           <Typography 
             variant="h3" 
-            className={styles.reasonsTitle}
             sx={{
               fontFamily: theme.typography.fontFamily.primary,
               fontWeight: 700,
               color: theme.colors.cultural.primary,
               textAlign: 'center',
-              marginBottom: '3rem'
+              mb: 6,
+              fontSize: { xs: '2rem', md: '2.5rem' },
             }}
           >
             Reasons for Choosing Us
@@ -284,14 +342,14 @@ export default function Cultural() {
               { icon: '🎯', title: 'One-stop Travel', description: 'Everything you need in one place' }
             ].map((reason, index) => (
               <Grid item xs={12} md={4} key={index}>
-                <Box className={styles.reasonCard}>
-                  <div className={styles.reasonIcon}>{reason.icon}</div>
+                <ReasonCard>
+                  <Typography sx={{ fontSize: '3rem', mb: 2 }}>{reason.icon}</Typography>
                   <Typography 
                     variant="h5" 
                     sx={{
                       fontWeight: 700,
-                      marginBottom: '0.5rem',
-                      color: theme.colors.text.primary
+                      mb: 1,
+                      color: 'var(--text-primary)'
                     }}
                   >
                     {reason.title}
@@ -299,18 +357,17 @@ export default function Cultural() {
                   <Typography 
                     variant="body2" 
                     sx={{
-                      color: theme.colors.text.secondary
+                      color: 'var(--text-secondary)'
                     }}
                   >
                     {reason.description}
                   </Typography>
-                </Box>
+                </ReasonCard>
               </Grid>
             ))}
           </Grid>
         </Container>
-      </section>
-    </div>
+      </Box>
+    </Box>
   );
 }
-

@@ -21,7 +21,6 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import TerrainIcon from '@mui/icons-material/Terrain';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
-import styles from '@/styles/Explore.module.css';
 import theme from '@/src/theme';
 
 export default function Explore() {
@@ -82,36 +81,69 @@ export default function Explore() {
     }
   };
 
+  const getHeroGradient = (category) => {
+    switch(category) {
+      case 'beaches':
+        return 'linear-gradient(135deg, rgba(0, 168, 204, 0.8) 0%, rgba(13, 202, 240, 0.6) 100%)';
+      case 'mountains':
+        return 'linear-gradient(135deg, rgba(45, 80, 22, 0.8) 0%, rgba(74, 124, 44, 0.6) 100%)';
+      case 'cultural':
+        return 'linear-gradient(135deg, rgba(139, 69, 19, 0.8) 0%, rgba(210, 105, 30, 0.6) 100%)';
+      default:
+        return 'linear-gradient(135deg, rgba(75, 140, 168, 0.8) 0%, rgba(58, 122, 143, 0.6) 100%)';
+    }
+  };
+
   return (
-    <div className={styles.pageContainer}>
+    <Box sx={{ minHeight: '100vh', background: 'var(--background)' }}>
       <Navbar />
 
-      <section className={styles.heroSection}>
-        <Container maxWidth="lg">
-          <Box sx={{ textAlign: 'center', padding: '4rem 0' }}>
+      <Box
+        sx={{
+          position: 'relative',
+          minHeight: '60vh',
+          backgroundImage: 'url(https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1920&h=1080&fit=crop&q=80)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: getHeroGradient(selectedCategory),
+            transition: 'background 0.5s ease',
+          },
+        }}
+      >
+        <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
+          <Box sx={{ textAlign: 'center', padding: '4rem 0', color: 'white' }}>
             <Typography 
               variant="h2" 
               sx={{
                 fontFamily: theme.typography.fontFamily.primary,
                 fontWeight: 800,
                 marginBottom: '1rem',
-                color: theme.colors.text.primary,
+                color: 'white',
                 fontSize: { xs: '2rem', md: '3rem' }
               }}
             >
               Search <span style={{ 
-                color: selectedCategory === 'beaches' ? theme.colors.beaches.primary :
-                       selectedCategory === 'mountains' ? theme.colors.mountains.primary :
-                       selectedCategory === 'cultural' ? theme.colors.cultural.primary :
-                       theme.colors.brand.primary,
-                transition: 'color 0.3s ease'
+                color: selectedCategory === 'beaches' ? '#80deea' :
+                       selectedCategory === 'mountains' ? '#a5d6a7' :
+                       selectedCategory === 'cultural' ? '#ffcc80' :
+                       '#ffd700',
+                transition: 'color 0.5s ease',
+                textShadow: '2px 2px 4px rgba(0,0,0,0.3)'
               }}>Destinations</span>
             </Typography>
             <Typography 
               variant="h6" 
               sx={{
                 marginBottom: '3rem',
-                color: theme.colors.text.secondary,
+                color: 'rgba(255, 255, 255, 0.9)',
                 fontWeight: 400
               }}
             >
@@ -218,9 +250,9 @@ export default function Explore() {
             </Box>
           </Box>
         </Container>
-      </section>
+      </Box>
 
-      <section className={styles.resultsSection}>
+      <Box sx={{ py: 6, background: 'var(--background)' }}>
         <Container maxWidth="xl">
           <Typography 
             variant="h5" 
@@ -237,7 +269,6 @@ export default function Explore() {
             {filteredDestinations.map((destination, index) => (
               <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
                 <Card 
-                  className={styles.destinationCard}
                   onMouseEnter={() => setHoveredCard(index)}
                   onMouseLeave={() => setHoveredCard(null)}
                   onClick={() => router.push(`/package/${destination.name.toLowerCase().replace(/\s+/g, '-')}?category=${destination.category}`)}
@@ -365,10 +396,10 @@ export default function Explore() {
             </Box>
           )}
         </Container>
-      </section>
+      </Box>
 
       <Box sx={{ height: '4rem' }} />
-    </div>
+    </Box>
   );
 }
 

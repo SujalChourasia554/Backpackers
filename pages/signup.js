@@ -1,7 +1,9 @@
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import styles from '@/styles/Signup.module.css';
+import { Box, TextField, Button, Typography, Card, Container, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import theme from '@/src/theme';
 
 export default function Signup() {
   const router = useRouter();
@@ -48,51 +50,242 @@ export default function Signup() {
   };
 
   return (
-    <div className={styles.signupContainer}>
-      <div className={styles.signupCard}>
-        <div className={styles.junglePanel}>
-          <div className={styles.jungleBackground}></div>
-          <div className={styles.jungleOverlay}></div>
-          <div className={styles.jungleContent}>
-            <h1 className={styles.jungleTitle}>Hello, Backpacker!</h1>
-            <p className={styles.jungleText}>
-              Register with your personal account to explore amazing destinations
-            </p>
-            <Link href="/login">
-              <button className={styles.backToLoginButton}>
-                BACK TO LOGIN
-              </button>
-            </Link>
-          </div>
-        </div>
+    <Box
+      sx={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'white',
+        padding: '20px',
+      }}
+    >
+      <Container maxWidth="lg">
+        <IconButton
+          onClick={() => router.push('/')}
+          sx={{
+            position: 'absolute',
+            top: 20,
+            right: 20,
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            color: '#fff',
+            zIndex: 10,
+            '&:hover': {
+              backgroundColor: 'rgba(0, 0, 0, 0.9)',
+              transform: 'scale(1.1)',
+            },
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+        <Card
+          sx={{
+            maxWidth: '1150px',
+            height: '650px',
+            margin: '0 auto',
+            display: 'flex',
+            borderRadius: '25px',
+            boxShadow: '0 15px 50px rgba(0, 0, 0, 0.12)',
+            overflow: 'hidden',
+          }}
+        >
+          <Box
+            sx={{
+              flex: 1.3,
+              position: 'relative',
+              overflow: 'hidden',
+              borderRadius: '25px 0 0 25px',
+              backgroundImage: 'url("https://images.unsplash.com/photo-1678084559483-65e6ba4d9aba?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGJhY2twYWNraW5nfGVufDB8fDB8fHww")',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+              backgroundColor: '#2d5016',
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.4) 100%)',
+                zIndex: 2,
+              },
+            }}
+          >
+            <Box
+              sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                textAlign: 'center',
+                color: 'white',
+                zIndex: 10,
+                padding: '50px 45px',
+                width: '100%',
+              }}
+            >
+              <Typography
+                variant="h2"
+                sx={{
+                  fontSize: '3rem',
+                  fontWeight: 700,
+                  mb: 3,
+                  textShadow: '2px 2px 6px rgba(0, 0, 0, 0.4)',
+                  letterSpacing: '-0.5px',
+                }}
+              >
+                Hello, Backpacker!
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  fontSize: '1rem',
+                  lineHeight: 1.7,
+                  opacity: 0.98,
+                  textShadow: '1px 1px 3px rgba(0, 0, 0, 0.3)',
+                  padding: '0 20px',
+                  mb: 4,
+                }}
+              >
+                Register with your personal account to explore amazing destinations
+              </Typography>
+              <Link href="/login" passHref style={{ textDecoration: 'none' }}>
+                <Button
+                  variant="outlined"
+                  sx={{
+                    padding: '14px 45px',
+                    background: 'transparent',
+                    color: 'white',
+                    border: '2px solid white',
+                    borderRadius: '12px',
+                    fontSize: '0.875rem',
+                    fontWeight: 600,
+                    letterSpacing: '1.2px',
+                    boxShadow: '0 5px 18px rgba(0, 0, 0, 0.25)',
+                    '&:hover': {
+                      background: 'rgba(255, 255, 255, 0.15)',
+                      border: '2px solid white',
+                      transform: 'translateY(-2px)',
+                      boxShadow: '0 7px 22px rgba(0, 0, 0, 0.3)',
+                    },
+                  }}
+                >
+                  BACK TO LOGIN
+                </Button>
+              </Link>
+            </Box>
+          </Box>
 
-        <div className={styles.createAccountPanel}>
-          <h2 className={styles.createAccountTitle}>Create Account</h2>
-          <form onSubmit={handleSubmit} className={styles.otpForm}>
-            <div className={styles.otpInputs} onPaste={handlePaste}>
-              {otp.map((digit, index) => (
-                <input
-                  key={index}
-                  ref={inputRefs[index]}
-                  type="text"
-                  inputMode="numeric"
-                  maxLength="1"
-                  className={styles.otpInput}
-                  value={digit}
-                  onChange={(e) => handleOtpChange(index, e.target.value)}
-                  onKeyDown={(e) => handleKeyDown(index, e)}
-                  required
-                />
-              ))}
-            </div>
-            <label className={styles.verifyOtpLabel}>Verify OTP</label>
-            <button type="submit" className={styles.signupSubmitButton}>
-              SIGN UP
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
+          <Box
+            sx={{
+              flex: 1,
+              background: '#f5f5f5',
+              padding: { xs: '2rem', md: '4rem 3.5rem' },
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              borderRadius: '0 25px 25px 0',
+            }}
+          >
+            <Typography
+              variant="h3"
+              sx={{
+                fontSize: '2.125rem',
+                fontWeight: 700,
+                color: '#000',
+                mb: 6,
+                textAlign: 'left',
+                letterSpacing: '-0.5px',
+              }}
+            >
+              Create Account
+            </Typography>
+            <Box
+              component="form"
+              onSubmit={handleSubmit}
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 3,
+              }}
+            >
+              <Box
+                sx={{
+                  display: 'flex',
+                  gap: 2,
+                  justifyContent: 'flex-start',
+                  mb: 1.5,
+                }}
+                onPaste={handlePaste}
+              >
+                {otp.map((digit, index) => (
+                  <TextField
+                    key={index}
+                    inputRef={inputRefs[index]}
+                    type="text"
+                    inputMode="numeric"
+                    inputProps={{ maxLength: 1 }}
+                    value={digit}
+                    onChange={(e) => handleOtpChange(index, e.target.value)}
+                    onKeyDown={(e) => handleKeyDown(index, e)}
+                    required
+                    sx={{
+                      width: '70px',
+                      '& .MuiOutlinedInput-root': {
+                        height: '70px',
+                        borderRadius: '10px',
+                        backgroundColor: 'white',
+                        fontSize: '1.75rem',
+                        fontWeight: 600,
+                        textAlign: 'center',
+                        '& input': {
+                          textAlign: 'center',
+                        },
+                      },
+                    }}
+                  />
+                ))}
+              </Box>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: '#888',
+                  fontSize: '0.875rem',
+                  mt: -1.5,
+                  mb: 1.5,
+                }}
+              >
+                Verify OTP
+              </Typography>
+              <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                sx={{
+                  mt: 5,
+                  padding: '16px',
+                  background: '#1a1a1a',
+                  color: 'white',
+                  fontSize: '0.9375rem',
+                  fontWeight: 600,
+                  borderRadius: '10px',
+                  letterSpacing: '1.5px',
+                  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',
+                  '&:hover': {
+                    background: '#2a2a2a',
+                    transform: 'translateY(-2px)',
+                    boxShadow: '0 6px 20px rgba(0, 0, 0, 0.4)',
+                  },
+                }}
+              >
+                SIGN UP
+              </Button>
+            </Box>
+          </Box>
+        </Card>
+      </Container>
+    </Box>
   );
 }
-

@@ -18,7 +18,6 @@ import {
   Chip
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import styles from '@/styles/Package.module.css';
 import theme from '@/src/theme';
 
 export default function PackagePage() {
@@ -141,30 +140,47 @@ export default function PackagePage() {
   const filteredPackages = packages.filter(pkg => pkg.price <= budget);
 
   return (
-    <div className={styles.pageContainer}>
+    <Box sx={{ minHeight: '100vh', background: 'var(--background)' }}>
       <Navbar />
 
-      {/* Hero Section */}
-      <section 
-        className={styles.heroSection}
-        style={{
+      <Box 
+        sx={{
+          position: 'relative',
+          height: '60vh',
+          minHeight: '400px',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed',
           backgroundImage: category === 'beaches' 
             ? 'url(https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1920&h=1080&fit=crop&q=80)'
             : category === 'mountains'
             ? 'url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop&q=80)'
             : 'url(https://images.unsplash.com/photo-1564507592333-c60657eea523?w=1920&h=1080&fit=crop&q=80)',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: `linear-gradient(to bottom, ${themeColors.primary}80, ${themeColors.dark}CC)`,
+          },
         }}
       >
-        <div 
-          className={styles.heroOverlay}
-          style={{
-            background: `linear-gradient(to bottom, ${themeColors.primary}80, ${themeColors.dark}CC)`
+        <Box 
+          sx={{
+            position: 'relative',
+            zIndex: 1,
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
           }}
-        />
-        <div className={styles.heroContent}>
+        >
           <Typography 
-            variant="h1" 
-            className={styles.heroTitle}
+            variant="h1"
             sx={{
               fontFamily: theme.typography.fontFamily.primary,
               fontWeight: 800,
@@ -187,8 +203,8 @@ export default function PackagePage() {
           >
             Discover Amazing Packages
           </Typography>
-        </div>
-      </section>
+        </Box>
+      </Box>
 
       {/* Main Content */}
       <Container maxWidth="xl" sx={{ marginTop: '-80px', position: 'relative', zIndex: 10 }}>
@@ -482,7 +498,7 @@ export default function PackagePage() {
       </Container>
 
       <Box sx={{ height: '4rem' }} />
-    </div>
+    </Box>
   );
 }
 
