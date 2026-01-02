@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Navbar from "@/Components/Navbar";
 import { 
@@ -12,12 +12,12 @@ import {
   TextField,
   Slider,
   FormControl,
-  InputLabel,
   Select,
   MenuItem,
-  Chip
+  Chip,
+  CircularProgress,
+  Alert
 } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
 import theme from '@/src/theme';
 
 export default function PackagePage() {
@@ -25,71 +25,99 @@ export default function PackagePage() {
   const { destination, category } = router.query;
   const [budget, setBudget] = useState(25000);
   const [sortBy, setSortBy] = useState('popularity');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Get destination name formatted
-  const destinationName = destination 
-    ? destination.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
-    : '';
-
-  // Get theme colors based on category
-  const getThemeColors = () => {
-    switch(category) {
-      case 'beaches':
-        return {
-          primary: theme.colors.beaches.primary,
-          dark: theme.colors.beaches.dark,
-          light: theme.colors.beaches.light,
-          accent: theme.colors.beaches.accent,
-        };
-      case 'mountains':
-        return {
-          primary: theme.colors.mountains.primary,
-          dark: theme.colors.mountains.dark,
-          light: theme.colors.mountains.light,
-          accent: theme.colors.mountains.accent,
-        };
-      case 'cultural':
-        return {
-          primary: theme.colors.cultural.primary,
-          dark: theme.colors.cultural.dark,
-          light: theme.colors.cultural.light,
-          accent: theme.colors.cultural.accent,
-        };
-      default:
-        return {
-          primary: theme.colors.brand.primary,
-          dark: theme.colors.brand.primary,
-          light: '#e0f7fa',
-          accent: '#80deea',
-        };
+  // Wait for router to be ready
+  useEffect(() => {
+    if (router.isReady) {
+      setIsLoading(false);
+      // Validate destination
+      if (!destination) {
+        setError('Destination not specified');
+      }
     }
+  }, [router.isReady, destination]);
+
+  // Get destination name formatted with validation
+  const getDestinationName = () => {
+    if (!destination) return 'Destination';
+    try {
+      return destination.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    } catch (e) {
+      console.error('Error formatting destination name:', e);
+      return 'Destination';
+    }
+  };
+
+  const destinationName = getDestinationName();
+
+  // Get theme colors based on category with fallback
+  const getThemeColors = () => {
+    const categoryColors = {
+      beaches: {
+        primary: theme.colors.beaches.primary,
+        dark: theme.colors.beaches.dark,
+        light: theme.colors.beaches.light,
+        accent: theme.colors.beaches.accent,
+      },
+      mountains: {
+        primary: theme.colors.mountains.primary,
+        dark: theme.colors.mountains.dark,
+        light: theme.colors.mountains.light,
+        accent: theme.colors.mountains.accent,
+      },
+      cultural: {
+        primary: theme.colors.cultural.primary,
+        dark: theme.colors.cultural.dark,
+        light: theme.colors.cultural.light,
+        accent: theme.colors.cultural.accent,
+      }
+    };
+
+    return categoryColors[category] || {
+      primary: theme.colors.brand.primary,
+      dark: theme.colors.brand.primary,
+      light: '#e0f7fa',
+      accent: '#80deea',
+    };
   };
 
   const themeColors = getThemeColors();
 
-  // Get destination-specific images
+  // Get destination-specific images with fallback
   const getPackageImages = () => {
     const imageMap = {
-      'beaches': {
+      beaches: {
         budget: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=600&fit=crop&q=80',
         premium: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800&h=600&fit=crop&q=80',
         luxury: 'https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800&h=600&fit=crop&q=80'
       },
-      'mountains': {
+      mountains: {
         budget: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&q=80',
         premium: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&q=80',
         luxury: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop&q=80'
       },
-      'cultural': {
+      cultural: {
         budget: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&h=600&fit=crop&q=80',
         premium: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?w=800&h=600&fit=crop&q=80',
         luxury: 'https://images.unsplash.com/photo-1548013146-72479768bada?w=800&h=600&fit=crop&q=80'
       }
     };
-    return imageMap[category] || imageMap['beaches'];
+    return imageMap[category] || imageMap.beaches;
   };
 
   const packageImages = getPackageImages();
+
+  // Get hero image with fallback
+  const getHeroImage = () => {
+    const heroImages = {
+      beaches: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1920&h=1080&fit=crop&q=80',
+      mountains: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop&q=80',
+      cultural: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=1920&h=1080&fit=crop&q=80'
+    };
+    return heroImages[category] || heroImages.beaches;
+  };
 
   // Sample packages data
   const packages = [
@@ -137,7 +165,84 @@ export default function PackagePage() {
     }
   ];
 
+  // Handle budget change with validation
+  const handleBudgetChange = (value) => {
+    const numValue = Number(value);
+    if (numValue < 0) {
+      setBudget(0);
+    } else if (numValue > 100000) {
+      setBudget(100000);
+    } else {
+      setBudget(numValue);
+    }
+  };
+
   const filteredPackages = packages.filter(pkg => pkg.price <= budget);
+
+  // Handle package click with proper mapping
+  const handlePackageClick = () => {
+    const packageMap = {
+      'goa': 'goa',
+      'goa beaches': 'goa',
+      'manali': 'manali',
+      'hampi': 'hampi',
+      'maldives': 'goa',
+      'andaman islands': 'goa',
+      'kerala beaches': 'goa',
+      'phuket': 'goa',
+      'bali beaches': 'goa',
+      'leh-ladakh': 'manali',
+      'kasol': 'manali',
+      'shimla': 'manali',
+      'darjeeling': 'manali',
+      'mussoorie': 'manali',
+      'varanasi': 'hampi',
+      'jaipur': 'hampi',
+      'khajuraho': 'hampi',
+      'ajanta & ellora': 'hampi',
+      'mysore': 'hampi'
+    };
+    
+    const packageId = packageMap[destinationName.toLowerCase()];
+    
+    if (packageId) {
+      router.push(`/${packageId}`);
+    } else {
+      // Fallback to goa with notification
+      console.warn(`No package found for ${destinationName}, redirecting to Goa`);
+      router.push('/goa');
+    }
+  };
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <Box sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--background)' }}>
+        <Navbar />
+        <Box sx={{ textAlign: 'center', mt: 10 }}>
+          <CircularProgress size={60} sx={{ color: theme.colors.brand.primary }} />
+          <Typography sx={{ mt: 2, color: theme.colors.text.primary }}>Loading packages...</Typography>
+        </Box>
+      </Box>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <Box sx={{ minHeight: '100vh', background: 'var(--background)' }}>
+        <Navbar />
+        <Container maxWidth="md" sx={{ mt: 10 }}>
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+          <Button variant="contained" onClick={() => router.push('/')} sx={{ backgroundColor: theme.colors.brand.primary }}>
+            Go to Home
+          </Button>
+        </Container>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ minHeight: '100vh', background: 'var(--background)' }}>
@@ -151,11 +256,7 @@ export default function PackagePage() {
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundAttachment: 'fixed',
-          backgroundImage: category === 'beaches' 
-            ? 'url(https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1920&h=1080&fit=crop&q=80)'
-            : category === 'mountains'
-            ? 'url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop&q=80)'
-            : 'url(https://images.unsplash.com/photo-1564507592333-c60657eea523?w=1920&h=1080&fit=crop&q=80)',
+          backgroundImage: `url(${getHeroImage()})`,
           '&::before': {
             content: '""',
             position: 'absolute',
@@ -234,7 +335,7 @@ export default function PackagePage() {
                 variant="body2" 
                 sx={{ 
                   marginBottom: '2rem',
-                  color: theme.colors.text.secondary
+                  color: theme.colors.text.muted
                 }}
               >
                 Book your trip worry-free!
@@ -244,7 +345,8 @@ export default function PackagePage() {
                 variant="h6" 
                 sx={{ 
                   marginBottom: '1rem',
-                  fontWeight: 700
+                  fontWeight: 700,
+                  color: theme.colors.text.primary
                 }}
               >
                 Budget
@@ -252,7 +354,7 @@ export default function PackagePage() {
               <Box sx={{ padding: '0 0.5rem', marginBottom: '2rem' }}>
                 <Slider
                   value={budget}
-                  onChange={(e, newValue) => setBudget(newValue)}
+                  onChange={(e, newValue) => handleBudgetChange(newValue)}
                   min={8000}
                   max={40000}
                   step={1000}
@@ -266,8 +368,8 @@ export default function PackagePage() {
                   }}
                 />
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.5rem' }}>
-                  <Typography variant="body2">₹8,000</Typography>
-                  <Typography variant="body2">₹40,000</Typography>
+                  <Typography variant="body2" sx={{ color: theme.colors.text.muted }}>₹8,000</Typography>
+                  <Typography variant="body2" sx={{ color: theme.colors.text.muted }}>₹40,000</Typography>
                 </Box>
               </Box>
 
@@ -275,7 +377,8 @@ export default function PackagePage() {
                 variant="h6" 
                 sx={{ 
                   marginBottom: '1rem',
-                  fontWeight: 700
+                  fontWeight: 700,
+                  color: theme.colors.text.primary
                 }}
               >
                 Sort By
@@ -321,15 +424,16 @@ export default function PackagePage() {
               >
                 Enter Your Budget
               </Typography>
-              <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: { xs: 'wrap', sm: 'nowrap' } }}>
                 <TextField
                   fullWidth
                   type="number"
                   value={budget}
-                  onChange={(e) => setBudget(Number(e.target.value))}
-                  placeholder="15,000"
+                  onChange={(e) => handleBudgetChange(e.target.value)}
+                  placeholder="25,000"
+                  inputProps={{ min: 0, max: 100000 }}
                   InputProps={{
-                    startAdornment: <Typography sx={{ marginRight: 1, color: theme.colors.text.secondary }}>₹</Typography>,
+                    startAdornment: <Typography sx={{ marginRight: 1, color: theme.colors.text.primary, fontWeight: 600 }}>₹</Typography>,
                   }}
                   sx={{
                     '& .MuiOutlinedInput-root': {
@@ -362,7 +466,9 @@ export default function PackagePage() {
                 sx={{ 
                   marginTop: '1rem',
                   textAlign: 'center',
-                  color: theme.colors.text.secondary
+                  color: theme.colors.text.primary,
+                  fontSize: '0.95rem',
+                  fontWeight: 500
                 }}
               >
                 Based on your budget, we suggest these {destinationName} packages.
@@ -373,17 +479,7 @@ export default function PackagePage() {
               {filteredPackages.map((pkg, index) => (
                 <Grid item xs={12} sm={6} md={4} key={index}>
                   <Card 
-                    onClick={() => {
-                      // Map destination name to package ID
-                      const packageMap = {
-                        'goa': 'goa',
-                        'goa beaches': 'goa',
-                        'manali': 'manali',
-                        'hampi': 'hampi'
-                      };
-                      const packageId = packageMap[destinationName.toLowerCase()] || 'goa';
-                      router.push(`/${packageId}`);
-                    }}
+                    onClick={handlePackageClick}
                     sx={{
                       borderRadius: '16px',
                       overflow: 'hidden',
@@ -485,12 +581,22 @@ export default function PackagePage() {
                   borderRadius: '20px'
                 }}
               >
-                <Typography variant="h5" sx={{ marginBottom: '1rem', color: theme.colors.text.secondary }}>
+                <Typography variant="h5" sx={{ marginBottom: '1rem', color: theme.colors.text.primary, fontWeight: 600 }}>
                   No packages found within your budget
                 </Typography>
-                <Typography variant="body1" sx={{ color: theme.colors.text.secondary }}>
-                  Try increasing your budget to see more options
+                <Typography variant="body1" sx={{ color: theme.colors.text.muted, mb: 2 }}>
+                  Try increasing your budget to ₹{Math.min(...packages.map(p => p.price)).toLocaleString()} or more
                 </Typography>
+                <Button
+                  variant="contained"
+                  onClick={() => handleBudgetChange(8000)}
+                  sx={{
+                    backgroundColor: themeColors.primary,
+                    '&:hover': { backgroundColor: themeColors.dark }
+                  }}
+                >
+                  Reset Budget
+                </Button>
               </Box>
             )}
           </Grid>
@@ -501,4 +607,3 @@ export default function PackagePage() {
     </Box>
   );
 }
-
