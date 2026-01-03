@@ -8,7 +8,7 @@ export default function Navbar() {
   
   return (
     <Box
-      sx={{
+      sx={{ 
         position: 'fixed',
         top: 0,
         left: 0,
@@ -36,7 +36,7 @@ export default function Navbar() {
             : '1px solid rgba(255, 255, 255, 0.4)',
           borderRadius: '50px',
           width: { xs: '96%', sm: '90%', md: '85%', lg: '80%' },
-          maxWidth: '1400px',
+        maxWidth: '1400px',
           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
           pointerEvents: 'auto',
           '&::before': {
@@ -263,7 +263,7 @@ export default function Navbar() {
             <ThemeToggle />
           </Box>
         </Toolbar>
-      </AppBar>
+    </AppBar>
     </Box>
   );
 }

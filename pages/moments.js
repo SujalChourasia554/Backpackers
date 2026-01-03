@@ -33,7 +33,7 @@ export default function Moments() {
       <Navbar />
       <Box sx={{ paddingTop: '120px' }}>
         <HeroSection onUploadClick={() => setOpenUploadDialog(true)} />
-      </Box>
+          </Box>
 
 
       <Box component="section">
@@ -60,7 +60,7 @@ export default function Moments() {
             ))}
           </Grid>
         </Container>
-      </Box>
+          </Box>
 
       <UploadDialog open={openUploadDialog} onClose={() => setOpenUploadDialog(false)} />
       <Box sx={{ height: '4rem' }} />
