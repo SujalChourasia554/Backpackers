@@ -65,6 +65,13 @@ export default function Home() {
     },
   ];
 
+  const scrollToDestinations = () => {
+    const destinationsSection = document.getElementById('destinations-section');
+    if (destinationsSection) {
+      destinationsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   return (
     <Box sx={{ minHeight: '100vh', background: 'var(--background)' }}>
       <Navbar />
@@ -102,27 +109,26 @@ export default function Home() {
               real backpacker journeys.
             </Typography>
 
-            <Link href="/explore" passHref style={{ textDecoration: 'none' }}>
-              <Button
-                variant="contained"
-                size="large"
-                sx={{
-                  background: 'linear-gradient(135deg, #4b8ca8 0%, #3a7a8f 100%)',
-                  color: 'white',
-                  fontSize: '1.1rem',
-                  fontWeight: 600,
-                  padding: '14px 40px',
-                  borderRadius: '12px',
-                  boxShadow: '0 8px 24px rgba(75, 140, 168, 0.3)',
-                  '&:hover': {
-                    background: 'linear-gradient(135deg, #3a7a8f 0%, #2d6a7f 100%)',
-                    boxShadow: '0 12px 32px rgba(75, 140, 168, 0.4)',
-                  },
-                }}
-              >
-                Start My Journey
-              </Button>
-            </Link>
+            <Button
+              variant="contained"
+              size="large"
+              onClick={scrollToDestinations}
+              sx={{
+                background: 'linear-gradient(135deg, #4b8ca8 0%, #3a7a8f 100%)',
+                color: 'white',
+                fontSize: '1.1rem',
+                fontWeight: 600,
+                padding: '14px 40px',
+                borderRadius: '12px',
+                boxShadow: '0 8px 24px rgba(75, 140, 168, 0.3)',
+                '&:hover': {
+                  background: 'linear-gradient(135deg, #3a7a8f 0%, #2d6a7f 100%)',
+                  boxShadow: '0 12px 32px rgba(75, 140, 168, 0.4)',
+                },
+              }}
+            >
+              Start My Journey
+            </Button>
           </Box>
 
           <Box
@@ -152,7 +158,7 @@ export default function Home() {
           </Box>
         </HeroSection>
 
-        <Box sx={{ py: 6 }}>
+        <Box id="destinations-section" sx={{ py: 6, scrollMarginTop: '100px' }}>
           <Typography
             variant="h2"
             align="center"
