@@ -16,12 +16,14 @@ import {
   MenuItem,
   Chip,
   CircularProgress,
-  Alert
+  Alert,
+  useTheme
 } from '@mui/material';
 import theme from '@/src/theme';
 
 export default function PackagePage() {
   const router = useRouter();
+  const muiTheme = useTheme();
   const { destination, category } = router.query;
   const [budget, setBudget] = useState(25000);
   const [sortBy, setSortBy] = useState('popularity');
@@ -217,11 +219,11 @@ export default function PackagePage() {
   // Loading state
   if (isLoading) {
     return (
-      <Box sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--background)' }}>
+      <Box sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: muiTheme.palette.background.default }}>
         <Navbar />
-        <Box sx={{ textAlign: 'center', mt: 10 }}>
+        <Box sx={{ textAlign: 'center', mt: 20 }}>
           <CircularProgress size={60} sx={{ color: theme.colors.brand.primary }} />
-          <Typography sx={{ mt: 2, color: theme.colors.text.primary }}>Loading packages...</Typography>
+          <Typography sx={{ mt: 2, color: muiTheme.palette.text.primary }}>Loading packages...</Typography>
         </Box>
       </Box>
     );
@@ -230,9 +232,9 @@ export default function PackagePage() {
   // Error state
   if (error) {
     return (
-      <Box sx={{ minHeight: '100vh', background: 'var(--background)' }}>
+      <Box sx={{ minHeight: '100vh', background: muiTheme.palette.background.default }}>
         <Navbar />
-        <Container maxWidth="md" sx={{ mt: 10 }}>
+        <Container maxWidth="md" sx={{ mt: 20 }}>
           <Alert severity="error" sx={{ mb: 2 }}>
             {error}
           </Alert>
@@ -245,7 +247,7 @@ export default function PackagePage() {
   }
 
   return (
-    <Box sx={{ minHeight: '100vh', background: 'var(--background)' }}>
+    <Box sx={{ minHeight: '100vh', background: muiTheme.palette.background.default }}>
       <Navbar />
 
       <Box 
@@ -253,6 +255,8 @@ export default function PackagePage() {
           position: 'relative',
           height: '60vh',
           minHeight: '400px',
+          marginTop: '-60px',
+          paddingTop: '140px',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundAttachment: 'fixed',
@@ -335,7 +339,7 @@ export default function PackagePage() {
                 variant="body2" 
                 sx={{ 
                   marginBottom: '2rem',
-                  color: theme.colors.text.muted
+                  color: muiTheme.palette.text.secondary
                 }}
               >
                 Book your trip worry-free!
@@ -346,7 +350,7 @@ export default function PackagePage() {
                 sx={{ 
                   marginBottom: '1rem',
                   fontWeight: 700,
-                  color: theme.colors.text.primary
+                  color: muiTheme.palette.text.primary
                 }}
               >
                 Budget
@@ -368,8 +372,8 @@ export default function PackagePage() {
                   }}
                 />
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.5rem' }}>
-                  <Typography variant="body2" sx={{ color: theme.colors.text.muted }}>₹8,000</Typography>
-                  <Typography variant="body2" sx={{ color: theme.colors.text.muted }}>₹40,000</Typography>
+                  <Typography variant="body2" sx={{ color: muiTheme.palette.text.secondary }}>₹8,000</Typography>
+                  <Typography variant="body2" sx={{ color: muiTheme.palette.text.secondary }}>₹40,000</Typography>
                 </Box>
               </Box>
 
@@ -378,7 +382,7 @@ export default function PackagePage() {
                 sx={{ 
                   marginBottom: '1rem',
                   fontWeight: 700,
-                  color: theme.colors.text.primary
+                  color: muiTheme.palette.text.primary
                 }}
               >
                 Sort By
@@ -433,7 +437,7 @@ export default function PackagePage() {
                   placeholder="25,000"
                   inputProps={{ min: 0, max: 100000 }}
                   InputProps={{
-                    startAdornment: <Typography sx={{ marginRight: 1, color: theme.colors.text.primary, fontWeight: 600 }}>₹</Typography>,
+                    startAdornment: <Typography sx={{ marginRight: 1, color: muiTheme.palette.text.primary, fontWeight: 600 }}>₹</Typography>,
                   }}
                   sx={{
                     '& .MuiOutlinedInput-root': {
@@ -466,7 +470,7 @@ export default function PackagePage() {
                 sx={{ 
                   marginTop: '1rem',
                   textAlign: 'center',
-                  color: theme.colors.text.primary,
+                  color: muiTheme.palette.text.primary,
                   fontSize: '0.95rem',
                   fontWeight: 500
                 }}
@@ -506,7 +510,7 @@ export default function PackagePage() {
                         sx={{
                           fontWeight: 700,
                           marginBottom: '0.4rem',
-                          color: theme.colors.text.primary,
+                          color: muiTheme.palette.text.primary,
                           fontSize: '1.1rem'
                         }}
                       >
@@ -577,14 +581,14 @@ export default function PackagePage() {
                 sx={{ 
                   textAlign: 'center',
                   padding: '4rem 2rem',
-                  backgroundColor: theme.colors.background.secondary,
+                  backgroundColor: muiTheme.palette.background.paper,
                   borderRadius: '20px'
                 }}
               >
-                <Typography variant="h5" sx={{ marginBottom: '1rem', color: theme.colors.text.primary, fontWeight: 600 }}>
+                <Typography variant="h5" sx={{ marginBottom: '1rem', color: muiTheme.palette.text.primary, fontWeight: 600 }}>
                   No packages found within your budget
                 </Typography>
-                <Typography variant="body1" sx={{ color: theme.colors.text.muted, mb: 2 }}>
+                <Typography variant="body1" sx={{ color: muiTheme.palette.text.secondary, mb: 2 }}>
                   Try increasing your budget to ₹{Math.min(...packages.map(p => p.price)).toLocaleString()} or more
                 </Typography>
                 <Button
