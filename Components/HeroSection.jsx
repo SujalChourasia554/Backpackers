@@ -3,51 +3,105 @@ import AddIcon from '@mui/icons-material/Add';
 import themeConfig from '@/src/theme';
 
 export default function HeroSection({ onUploadClick }) {
+
+  const heroSectionStyle = {
+    marginTop : 5,
+    marginLeft: 15,
+    display: 'flex',
+    gap: 3,
+    py: 4,
+    minHeight: '80vh',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: { xs: 'column', md: 'row' },
+    textAlign: { xs: 'center', md: 'left' },
+    minHeight: { xs: 'auto', md: '80vh' },
+  }
+
+  const heroSectionButtonStyle = {
+    background: 'linear-gradient(135deg, #4b8ca8 0%, #3a7a8f 100%)',
+    color: 'white',
+    fontSize: '1.1rem',
+    fontWeight: 600,
+    padding: '14px 40px',
+    borderRadius: '12px',
+    boxShadow: '0 8px 24px rgba(75, 140, 168, 0.3)',
+    '&:hover': {
+      background: 'linear-gradient(135deg, #3a7a8f 0%, #2d6a7f 100%)',
+      boxShadow: '0 12px 32px rgba(75, 140, 168, 0.4)',
+    },
+  }
+
+  const scrollToDestinations = () => {
+    const destinationsSection = document.getElementById('destinations-section');
+    if (destinationsSection) {
+      destinationsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   const muiTheme = useTheme();
-  
+
   return (
-    <Box component="section">
-      <Container maxWidth="lg">
-        <Box sx={{ textAlign: 'center', padding: { xs: '2rem 0', md: '2rem 0' } }}>
-          <Typography 
-            variant="h2" 
-            sx={{
-              fontFamily: themeConfig.typography.fontFamily.primary,
-              fontWeight: 800,
-              marginBottom: '1rem',
-              color: muiTheme.palette.text.primary,
-              fontSize: { xs: '2rem', md: '3rem' }
-            }}
-          >
-            Travel <span style={{ color: themeConfig.colors.brand.primary }}>Moments</span>
-          </Typography>
-          <Typography variant="h6" sx={{ marginBottom: '2rem', color: muiTheme.palette.text.secondary, fontWeight: 400 }}>
-            Share your adventures and inspire fellow travelers
-          </Typography>
-          <Button
-            variant="contained"
-            size="large"
-            startIcon={<AddIcon />}
-            onClick={onUploadClick}
-            sx={{
-              backgroundColor: themeConfig.colors.brand.primary,
-              padding: '14px 32px',
-              borderRadius: '50px',
-              fontSize: '1rem',
-              fontWeight: 600,
-              textTransform: 'none',
-              boxShadow: '0 8px 24px rgba(75, 140, 168, 0.3)',
-              '&:hover': {
-                backgroundColor: themeConfig.colors.brand.primary,
-                transform: 'scale(1.05)',
-                boxShadow: '0 12px 32px rgba(75, 140, 168, 0.4)',
-              }
-            }}
-          >
-            Share Your Moment
-          </Button>
-        </Box>
-      </Container>
+    <Box id="HeroSection" sx={heroSectionStyle}>
+
+      <Box sx={{ flex: 1 }}>
+        <Typography
+          variant="h1"
+          sx={{
+            fontSize: { xs: '2.5rem', md: '3.5rem', lg: '4rem' },
+            fontWeight: 700, fontFamily: "'Montserrat', 'Poppins', sans-serif",
+            lineHeight: 1.2, mb: 3, color: 'var(--text-primary)',
+          }}
+        >
+          Travel Smarter. <br />
+          Backpack lighter.
+        </Typography>
+
+        <Typography
+          variant="body1"
+          sx={{
+            fontSize: { xs: '1rem', md: '1.125rem' }, lineHeight: 1.6,
+            mb: 4, color: 'var(--text-secondary)', maxWidth: '600px',
+          }}
+        >
+          Plan stays, food and unforgettable experience that
+          match your budget and vibe – powered by AI and
+          real backpacker journeys.
+        </Typography>
+
+        <Button variant="contained" size="large"
+          onClick={scrollToDestinations}
+          sx={heroSectionButtonStyle}
+        >
+          Start My Journey
+        </Button>
+      </Box>
+
+      <Box
+        sx={{
+          flex: 1,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Box
+          component="img"
+          src="/logo.png"
+          alt="Backpackers Logo"
+          sx={{
+            maxWidth: { xs: '300px', md: '400px', lg: '500px' },
+            width: '100%',
+            height: 'auto',
+            filter: 'drop-shadow(0 10px 30px rgba(0, 0, 0, 0.2))',
+            animation: 'float 3s ease-in-out infinite',
+            '@keyframes float': {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-20px)' },
+            },
+          }}
+        />
+      </Box>
     </Box>
   );
 }
