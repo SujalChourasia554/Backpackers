@@ -50,14 +50,8 @@ export default function DestinationCard({ destination, category, isHovered, onHo
             right: 0,
             bottom: 0,
             background: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.3) 100%)',
-            display: 'flex',
-            alignItems: 'flex-end',
-            justifyContent: 'center',
-            pb: 2,
           }}
-        >
-          {Icon && <Icon sx={{ fontSize: 40, color: 'white', opacity: 0.9 }} />}
-        </Box>
+        />
       </Box>
       <CardContent sx={{ padding: '1.5rem' }}>
         <Typography variant="h5" component="h3" sx={{ fontWeight: 700, mb: 0.5, color: muiTheme.palette.text.primary, fontFamily: theme.typography.fontFamily.primary }}>

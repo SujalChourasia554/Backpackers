@@ -47,21 +47,21 @@ export default function Home() {
       title: "Beaches",
       description: "Discover pristine beaches and coastal paradise",
       image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=600&fit=crop&q=80",
-      link: "/beaches",
+      link: "/category/beaches",
       color: "#00a8cc"
     },
     {
       title: "Mountains",
       description: "Explore majestic peaks and scenic trails",
       image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&q=80",
-      link: "/mountains",
+      link: "/category/mountains",
       color: "#2d5016"
     },
     {
       title: "Cultural & Heritage",
       description: "Experience rich history and traditions",
       image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&h=600&fit=crop&q=80",
-      link: "/cultural",
+      link: "/category/cultural",
       color: "#8b4513"
     },
   ];
