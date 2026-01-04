@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Navbar from "@/Components/Navbar";
 import DestinationCard from "@/Components/DestinationCard";
-import { Button, Typography, Box, Container, Grid } from '@mui/material';
+import { Button, Typography, Box, Container, Grid, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import theme from '@/src/theme';
@@ -24,10 +24,11 @@ const HeroSection = styled(Box)(({ theme }) => ({
 export default function CategoryPage({ category, config, destinations, icon: Icon }) {
   const [hoveredCard, setHoveredCard] = useState(null);
   const router = useRouter();
+  const muiTheme = useTheme();
   const colors = theme.colors[category];
 
   return (
-    <Box sx={{ minHeight: '100vh', background: 'var(--background)' }}>
+    <Box sx={{ minHeight: '100vh', background: muiTheme.palette.background.default }}>
       <Navbar />
 
       <HeroSection
@@ -73,13 +74,13 @@ export default function CategoryPage({ category, config, destinations, icon: Ico
         </Box>
       </HeroSection>
 
-      <Box sx={{ py: 8, background: 'var(--background)' }}>
+      <Box sx={{ py: 8, background: muiTheme.palette.background.default }}>
         <Container maxWidth="xl">
           <Box sx={{ textAlign: 'center', mb: 6 }}>
             <Typography variant="h3" sx={{ fontFamily: theme.typography.fontFamily.primary, fontWeight: 700, color: colors.primary, mb: 2, fontSize: { xs: '2rem', md: '2.5rem' } }}>
               {config.sectionTitle}
             </Typography>
-            <Typography variant="body1" sx={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
+            <Typography variant="body1" sx={{ color: muiTheme.palette.text.secondary, fontSize: '1.1rem' }}>
               {config.sectionDescription}
             </Typography>
           </Box>

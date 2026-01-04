@@ -1,4 +1,3 @@
-import "@/styles/globals.css";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useState, useEffect } from 'react';
@@ -109,6 +108,52 @@ const getMuiTheme = (mode = 'light') => createTheme({
     themeConfig.shadows['2xl'],
   ],
   components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        '*': {
+          margin: 0,
+          padding: 0,
+          boxSizing: 'border-box',
+        },
+        html: {
+          scrollBehavior: 'smooth',
+          transition: 'background-color 0.3s ease, color 0.3s ease',
+        },
+        body: {
+          fontFamily: themeConfig.typography.fontFamily.primary,
+          lineHeight: 1.6,
+          overflowX: 'hidden',
+          transition: 'background-color 0.3s ease, color 0.3s ease',
+          WebkitFontSmoothing: 'antialiased',
+          MozOsxFontSmoothing: 'grayscale',
+        },
+        'h1, h2, h3, h4, h5, h6': {
+          fontFamily: themeConfig.fonts.heading,
+          fontWeight: 700,
+          lineHeight: 1.2,
+        },
+        p: {
+          fontFamily: themeConfig.typography.fontFamily.primary,
+          lineHeight: 1.6,
+        },
+        a: {
+          textDecoration: 'none',
+          color: 'inherit',
+          transition: 'all 0.3s ease',
+        },
+        button: {
+          fontFamily: themeConfig.typography.fontFamily.primary,
+          cursor: 'pointer',
+          border: 'none',
+          outline: 'none',
+          transition: 'all 0.3s ease',
+          '&:hover': {
+            transform: 'translateY(-2px)',
+            boxShadow: themeConfig.shadows.md,
+          },
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {
