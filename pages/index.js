@@ -106,8 +106,8 @@ export default function Home() {
               }}
             >
               Plan stays, food and unforgettable experience that
-              match your budget and vibe – powered by AI and
-              real backpacker journeys.
+              match your budget and vibe – powered by real
+              backpacker journeys and travel expertise.
             </Typography>
 
             <Button
