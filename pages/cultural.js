@@ -1,5 +1,5 @@
 import CategoryPage from '@/Components/CategoryPage';
-import { destinationsData, categoryConfig } from '@/data/categoryDestinations';
+import { categoryConfig } from '../data/categoryDestinations';
 import TempleHinduIcon from '@mui/icons-material/TempleHindu';
 
 export default function Cultural() {
@@ -7,7 +7,7 @@ export default function Cultural() {
     <CategoryPage
       category="cultural"
       config={categoryConfig.cultural}
-      destinations={destinationsData.cultural}
+      destinations={[]}
       icon={TempleHinduIcon}
     />
   );

@@ -33,7 +33,14 @@ export default function ExploreCard({ destination, isHovered, onHover }) {
     <Card 
       onMouseEnter={() => onHover(true)}
       onMouseLeave={() => onHover(false)}
-      onClick={() => router.push(`/package/${destination.name.toLowerCase().replace(/\s+/g, '-')}?category=${destination.category}`)}
+      onClick={() => {
+        // Use destination ID if available, otherwise use name
+        if (destination._id) {
+          router.push(`/package/${destination._id}?category=${destination.category}`);
+        } else {
+          router.push(`/package/${destination.name.toLowerCase().replace(/\s+/g, '-')}?category=${destination.category}`);
+        }
+      }}
       sx={{
         height: '100%',
         borderRadius: '20px',

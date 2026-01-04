@@ -1,5 +1,5 @@
 import CategoryPage from '@/Components/CategoryPage';
-import { destinationsData, categoryConfig } from '@/data/categoryDestinations';
+import { categoryConfig } from '../data/categoryDestinations';
 import WavesIcon from '@mui/icons-material/Waves';
 
 export default function Beaches() {
@@ -7,7 +7,7 @@ export default function Beaches() {
     <CategoryPage
       category="beaches"
       config={categoryConfig.beaches}
-      destinations={destinationsData.beaches}
+      destinations={[]}
       icon={WavesIcon}
     />
   );
