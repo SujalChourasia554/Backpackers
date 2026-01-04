@@ -1,9 +1,10 @@
 import { useRouter } from 'next/router';
-import { Card, CardContent, CardMedia, Typography, Box } from '@mui/material';
+import { Card, CardContent, CardMedia, Typography, Box, useTheme } from '@mui/material';
 import theme from '@/src/theme';
 
 export default function DestinationCard({ destination, category, isHovered, onHover, icon: Icon }) {
   const router = useRouter();
+  const muiTheme = useTheme();
   const colors = theme.colors[category];
 
   return (
@@ -19,7 +20,7 @@ export default function DestinationCard({ destination, category, isHovered, onHo
         transform: isHovered ? 'translateY(-10px)' : 'translateY(0)',
         boxShadow: isHovered ? `0 20px 40px ${colors.primary}4D` : '0 4px 20px rgba(0, 0, 0, 0.1)',
         cursor: 'pointer',
-        background: 'var(--card-bg)',
+        background: muiTheme.palette.background.paper,
       }}
     >
       <Box sx={{ position: 'relative', overflow: 'hidden' }}>
@@ -52,13 +53,13 @@ export default function DestinationCard({ destination, category, isHovered, onHo
         </Box>
       </Box>
       <CardContent sx={{ padding: '1.5rem' }}>
-        <Typography variant="h5" component="h3" sx={{ fontWeight: 700, mb: 0.5, color: 'var(--text-primary)', fontFamily: theme.typography.fontFamily.primary }}>
+        <Typography variant="h5" component="h3" sx={{ fontWeight: 700, mb: 0.5, color: muiTheme.palette.text.primary, fontFamily: theme.typography.fontFamily.primary }}>
           {destination.name}
         </Typography>
         <Typography variant="body2" sx={{ color: colors.primary, mb: 1, fontWeight: 500 }}>
           📍 {destination.location}
         </Typography>
-        <Typography variant="body2" sx={{ color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+        <Typography variant="body2" sx={{ color: muiTheme.palette.text.secondary, lineHeight: 1.6 }}>
           {destination.description}
         </Typography>
       </CardContent>

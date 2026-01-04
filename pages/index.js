@@ -1,6 +1,6 @@
 import Navbar from "@/Components/Navbar";
 import Link from 'next/link';
-import { Box, Container, Typography, Button, Grid, Card, CardMedia, CardContent, Chip } from '@mui/material';
+import { Box, Container, Typography, Button, Grid, Card, CardMedia, CardContent, Chip, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 const HeroSection = styled(Box)(({ theme }) => ({
@@ -41,6 +41,7 @@ const PlanCard = styled(Box)(({ theme }) => ({
 }));
 
 export default function Home() {
+  const theme = useTheme();
   const categories = [
     {
       title: "Beaches",
@@ -73,7 +74,7 @@ export default function Home() {
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', background: 'var(--background)' }}>
+    <Box sx={{ minHeight: '100vh', background: theme.palette.background.default }}>
       <Navbar />
 
       <Container maxWidth="xl" sx={{ py: 4 }}>
@@ -87,7 +88,7 @@ export default function Home() {
                 fontFamily: "'Montserrat', 'Poppins', sans-serif",
                 lineHeight: 1.2,
                 mb: 3,
-                color: 'var(--text-primary)',
+                color: theme.palette.text.primary,
               }}
             >
               Travel Smarter. <br />
@@ -100,7 +101,7 @@ export default function Home() {
                 fontSize: { xs: '1rem', md: '1.125rem' },
                 lineHeight: 1.6,
                 mb: 4,
-                color: 'var(--text-secondary)',
+                color: theme.palette.text.secondary,
                 maxWidth: '600px',
               }}
             >
@@ -166,7 +167,7 @@ export default function Home() {
               fontSize: { xs: '2rem', md: '2.5rem' },
               fontWeight: 700,
               mb: 5,
-              color: 'var(--text-primary)',
+              color: theme.palette.text.primary,
             }}
           >
             Choose Your <Box component="span" sx={{ color: '#4b8ca8' }}>Destination</Box>
@@ -219,7 +220,7 @@ export default function Home() {
                     <CardContent sx={{ p: 3 }}>
                       <Typography
                         variant="body2"
-                        sx={{ mb: 2, color: 'var(--text-secondary)' }}
+                        sx={{ mb: 2, color: theme.palette.text.secondary }}
                       >
                         {category.description}
                       </Typography>
@@ -265,7 +266,7 @@ export default function Home() {
                   fontSize: { xs: '2rem', md: '2.5rem' },
                   fontWeight: 700,
                   mb: 3,
-                  color: 'var(--text-primary)',
+                  color: theme.palette.text.primary,
                   lineHeight: 1.2,
                 }}
               >
@@ -278,7 +279,7 @@ export default function Home() {
                   fontSize: '1.1rem',
                   lineHeight: 1.6,
                   mb: 4,
-                  color: 'var(--text-secondary)',
+                  color: theme.palette.text.secondary,
                 }}
               >
                 Stop spending hours researching. Tell us your budget, dates and interest,
