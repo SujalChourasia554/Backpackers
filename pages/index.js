@@ -2,21 +2,8 @@ import Navbar from "@/Components/Navbar";
 import Link from 'next/link';
 import { Box, Container, Typography, Button, Grid, Card, CardMedia, CardContent, Chip } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import HeroSection from "@/Components/HeroSection";
 
-const HeroSection = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  gap: '3rem',
-  padding: '4rem 0',
-  minHeight: '80vh',
-  [theme.breakpoints.down('md')]: {
-    flexDirection: 'column',
-    textAlign: 'center',
-    padding: '2rem 0',
-    minHeight: 'auto',
-  },
-}));
 
 const CategoryCard = styled(Card)(({ theme }) => ({
   borderRadius: '20px',
@@ -65,98 +52,24 @@ export default function Home() {
     },
   ];
 
-  const scrollToDestinations = () => {
-    const destinationsSection = document.getElementById('destinations-section');
-    if (destinationsSection) {
-      destinationsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
+  const dayPlanData = [
+    "✔ Check in The Hostel",
+    "✔ Visit the Waterfall",
+    "✔ Trek the Mountains"
+  ];
+
+
+  // ============================================================================
+  // THIS SECTION IS FOR STYLING
 
   return (
     <Box sx={{ minHeight: '100vh', background: 'var(--background)' }}>
       <Navbar />
 
       <Container maxWidth="xl" sx={{ py: 4 }}>
-        <HeroSection>
-          <Box sx={{ flex: 1 }}>
-            <Typography
-              variant="h1"
-              sx={{
-                fontSize: { xs: '2.5rem', md: '3.5rem', lg: '4rem' },
-                fontWeight: 700,
-                fontFamily: "'Montserrat', 'Poppins', sans-serif",
-                lineHeight: 1.2,
-                mb: 3,
-                color: 'var(--text-primary)',
-              }}
-            >
-              Travel Smarter. <br />
-              Backpack lighter.
-            </Typography>
 
-            <Typography
-              variant="body1"
-              sx={{
-                fontSize: { xs: '1rem', md: '1.125rem' },
-                lineHeight: 1.6,
-                mb: 4,
-                color: 'var(--text-secondary)',
-                maxWidth: '600px',
-              }}
-            >
-              Plan stays, food and unforgettable experience that
-              match your budget and vibe – powered by AI and
-              real backpacker journeys.
-            </Typography>
-
-            <Button
-              variant="contained"
-              size="large"
-              onClick={scrollToDestinations}
-              sx={{
-                background: 'linear-gradient(135deg, #4b8ca8 0%, #3a7a8f 100%)',
-                color: 'white',
-                fontSize: '1.1rem',
-                fontWeight: 600,
-                padding: '14px 40px',
-                borderRadius: '12px',
-                boxShadow: '0 8px 24px rgba(75, 140, 168, 0.3)',
-                '&:hover': {
-                  background: 'linear-gradient(135deg, #3a7a8f 0%, #2d6a7f 100%)',
-                  boxShadow: '0 12px 32px rgba(75, 140, 168, 0.4)',
-                },
-              }}
-            >
-              Start My Journey
-            </Button>
-          </Box>
-
-          <Box
-            sx={{
-              flex: 1,
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <Box
-              component="img"
-              src="/logo.png"
-              alt="Backpackers Logo"
-              sx={{
-                maxWidth: { xs: '300px', md: '400px', lg: '500px' },
-                width: '100%',
-                height: 'auto',
-                filter: 'drop-shadow(0 10px 30px rgba(0, 0, 0, 0.2))',
-                animation: 'float 3s ease-in-out infinite',
-                '@keyframes float': {
-                  '0%, 100%': { transform: 'translateY(0)' },
-                  '50%': { transform: 'translateY(-20px)' },
-                },
-              }}
-            />
-          </Box>
-        </HeroSection>
+        {/* ----------- THIS IS HERO SECTION ------------------ */}
+        <HeroSection></HeroSection>
 
         <Box id="destinations-section" sx={{ py: 6, scrollMarginTop: '100px' }}>
           <Typography
@@ -176,7 +89,7 @@ export default function Home() {
             {categories.map((category) => (
               <Grid item xs={12} sm={6} md={4} key={category.title}>
                 <Link href={category.link} passHref style={{ textDecoration: 'none' }}>
-                  <CategoryCard>
+                  <CategoryCard >
                     <CardMedia
                       component="div"
                       sx={{
@@ -317,16 +230,14 @@ export default function Home() {
                   Your 3-Day Plan
                 </Typography>
 
+
+                {/* THIS IS THE SECTION WHICH HANDLE DAY PLAN DATA */}
                 <Box component="ul" sx={{ listStyle: 'none', p: 0, mb: 3 }}>
-                  <Typography component="li" sx={{ mb: 1.5, fontSize: '1.1rem' }}>
-                    ✔ Check in The Hostel
-                  </Typography>
-                  <Typography component="li" sx={{ mb: 1.5, fontSize: '1.1rem' }}>
-                    ✔ Visit the Waterfall
-                  </Typography>
-                  <Typography component="li" sx={{ mb: 1.5, fontSize: '1.1rem' }}>
-                    ✔ Trek the Mountains
-                  </Typography>
+                  {dayPlanData.map((item, index) => (
+                    <Typography component="li" key={index} sx={{ mb: 1.5, fontSize: '1.1rem' }}>
+                      {item}
+                    </Typography>
+                  ))}
                 </Box>
 
                 <Chip
