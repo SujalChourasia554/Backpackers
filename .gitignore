@@ -40,5 +40,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# cursor
+# cursor - DO NOT COMMIT
 .cursor/
+.cursorignore
+*.cursor
