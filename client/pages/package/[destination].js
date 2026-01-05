@@ -100,8 +100,11 @@ export default function PackagePage() {
   
   // Filter packages by budget
   const filteredPackages = packages.filter(pkg => {
-    const totalBudget = pkg.budgetPerDay * pkg.totalDays;
-    return totalBudget <= budget;
+    // Ensure budgetPerDay exists, use default 3 days if totalDays is missing
+    if (!pkg.budgetPerDay) return false;
+    const days = pkg.totalDays || 3; // Default to 3 days if not specified
+    const totalBudget = pkg.budgetPerDay * days;
+    return !isNaN(totalBudget) && totalBudget <= budget;
   });
 
   const handlePackageClick = (packageId) => {
@@ -222,7 +225,8 @@ export default function PackagePage() {
             {filteredPackages.length > 0 ? (
               <Grid container spacing={2.5}>
               {filteredPackages.map((pkg) => {
-                const totalPrice = pkg.budgetPerDay * pkg.totalDays;
+                const days = pkg.totalDays || 3; // Default to 3 days if not specified
+                const totalPrice = pkg.budgetPerDay * days;
                 const packageImage = pkg.images && pkg.images.length > 0 ? pkg.images[0] : heroImage;
                 
                 return (
@@ -231,7 +235,7 @@ export default function PackagePage() {
                       <Box sx={{ height: 180, backgroundImage: `url(${packageImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
                       <CardContent sx={{ padding: '1.25rem' }}>
                         <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.4, color: muiTheme.palette.text.primary, fontSize: '1.1rem' }}>{pkg.name}</Typography>
-                        <Typography variant="body2" sx={{ color: themeColors.primary, mb: 0.75, fontWeight: 600 }}>{pkg.totalDays} Days</Typography>
+                        <Typography variant="body2" sx={{ color: themeColors.primary, mb: 0.75, fontWeight: 600 }}>{days} Days</Typography>
                         <Box sx={{ mb: 1 }}>
                           {pkg.highlights && pkg.highlights.slice(0, 3).map((highlight, idx) => (
                             <Chip key={idx} label={highlight} size="small" sx={{ margin: '0.2rem', backgroundColor: `${themeColors.primary}15`, color: themeColors.primary, fontWeight: 500, fontSize: '0.7rem', height: '22px' }} />
@@ -256,7 +260,17 @@ export default function PackagePage() {
               <Box sx={{ textAlign: 'center', padding: '4rem 2rem', backgroundColor: muiTheme.palette.background.paper, borderRadius: '20px' }}>
                 <Typography variant="h5" sx={{ mb: 1, color: muiTheme.palette.text.primary, fontWeight: 600 }}>No packages found within your budget</Typography>
                 <Typography variant="body1" sx={{ color: muiTheme.palette.text.secondary, mb: 2 }}>
-                  Try increasing your budget to ₹{Math.min(...packages.map(p => p.budgetPerDay * p.totalDays)).toLocaleString()} or more
+                  Try increasing your budget to ₹{(() => {
+                    const validBudgets = packages
+                      .map(p => {
+                        if (!p.budgetPerDay) return null;
+                        const days = p.totalDays || 3; // Default to 3 days
+                        return p.budgetPerDay * days;
+                      })
+                      .filter(b => b !== null && !isNaN(b) && b > 0);
+                    const minBudget = validBudgets.length > 0 ? Math.min(...validBudgets) : null;
+                    return minBudget ? minBudget.toLocaleString() : '10,000';
+                  })()} or more
                 </Typography>
                 <Button variant="contained" onClick={() => handleBudgetChange(8000)} sx={{ backgroundColor: themeColors.primary, '&:hover': { backgroundColor: themeColors.dark } }}>Reset Budget</Button>
               </Box>
