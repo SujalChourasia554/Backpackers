@@ -200,7 +200,15 @@ export default function Explore() {
                       {dest.name}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" noWrap>
-                      {dest.location || dest.state}
+                      {(() => {
+                        const loc = dest.location;
+                        if (!loc) return dest.state || dest.name;
+                        if (typeof loc === 'string') return loc;
+                        if (typeof loc === 'object' && loc !== null && !Array.isArray(loc)) {
+                          return dest.state || dest.name;
+                        }
+                        return String(loc);
+                      })()}
                     </Typography>
                   </Box>
                 </Box>

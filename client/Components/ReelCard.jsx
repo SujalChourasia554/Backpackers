@@ -130,7 +130,15 @@ export default function ReelCard({ reel, isHovered, isPlaying, onHover, onLike, 
           </Typography>
 
           <Typography variant="body2" sx={{ fontSize: '0.85rem', color: categoryColor, fontWeight: 600, mb: 0.75 }}>
-            📍 {reel.location}
+            📍 {(() => {
+              const loc = reel.location;
+              if (!loc) return 'Location';
+              if (typeof loc === 'string') return loc;
+              if (typeof loc === 'object' && loc !== null && !Array.isArray(loc)) {
+                return loc.timezone || 'Location';
+              }
+              return String(loc);
+            })()}
           </Typography>
 
           <Box sx={{ display: 'flex', gap: 0.5, mb: 1, flexWrap: 'wrap' }}>
