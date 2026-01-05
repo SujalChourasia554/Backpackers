@@ -17,10 +17,16 @@ export async function fetchDestinationsByCategory(category, limit = 50) {
     };
 
     const backendCategory = categoryMap[category] || category;
-    const response = await fetch(`${API_BASE_URL}/api/v1/destination/category/${encodeURIComponent(backendCategory)}/get`);
+    const response = await fetch(`${API_BASE_URL}/api/v1/destination/category/${encodeURIComponent(backendCategory)}/get`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     
     if (!response.ok) {
-      throw new Error(`Failed to fetch destinations: ${response.statusText}`);
+      console.error(`Failed to fetch destinations: ${response.status} ${response.statusText}`);
+      return [];
     }
 
     const data = await response.json();
@@ -29,6 +35,7 @@ export async function fetchDestinationsByCategory(category, limit = 50) {
     return results.slice(0, limit);
   } catch (error) {
     console.error('Error fetching destinations:', error);
+    // Return empty array instead of throwing to prevent crashes
     return [];
   }
 }
@@ -45,10 +52,16 @@ export async function fetchAllDestinations(filters = {}) {
     if (filters.category) queryParams.append('category', filters.category);
 
     const url = `${API_BASE_URL}/api/v1/destination/all/get${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     
     if (!response.ok) {
-      throw new Error(`Failed to fetch destinations: ${response.statusText}`);
+      console.error(`Failed to fetch destinations: ${response.status} ${response.statusText}`);
+      return [];
     }
 
     const data = await response.json();
@@ -70,10 +83,16 @@ export async function fetchAllDestinations(filters = {}) {
  */
 export async function fetchDestinationById(destinationId) {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/v1/destination/${destinationId}`);
+    const response = await fetch(`${API_BASE_URL}/api/v1/destination/${destinationId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     
     if (!response.ok) {
-      throw new Error(`Failed to fetch destination: ${response.statusText}`);
+      console.error(`Failed to fetch destination: ${response.status} ${response.statusText}`);
+      return null;
     }
 
     const data = await response.json();
@@ -98,10 +117,16 @@ export async function fetchPackagesByDestination(destinationId, filters = {}) {
     if (filters.sortBy) queryParams.append('sortBy', filters.sortBy);
 
     const url = `${API_BASE_URL}/api/v1/packages/destination/${destinationId}${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     
     if (!response.ok) {
-      throw new Error(`Failed to fetch packages: ${response.statusText}`);
+      console.error(`Failed to fetch packages: ${response.status} ${response.statusText}`);
+      return [];
     }
 
     const data = await response.json();
@@ -119,10 +144,16 @@ export async function fetchPackagesByDestination(destinationId, filters = {}) {
  */
 export async function fetchPackageById(packageId) {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/v1/packages/${packageId}`);
+    const response = await fetch(`${API_BASE_URL}/api/v1/packages/${packageId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     
     if (!response.ok) {
-      throw new Error(`Failed to fetch package: ${response.statusText}`);
+      console.error(`Failed to fetch package: ${response.status} ${response.statusText}`);
+      return null;
     }
 
     const data = await response.json();
