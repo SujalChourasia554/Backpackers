@@ -39,7 +39,7 @@ app.use(require("./routes/packageRoutes"));
 app.use(require("./routes/itineraryRoutes"));
 app.use(require("./routes/bookingRoutes"));
 // app.use(require("./routes/momentRoutes")); 
-//app.use(require("./routes/recommendationRoutes"));
+app.use(require("./routes/recommendationRoutes"));
 // reviewRoutes can be added later
 
 
