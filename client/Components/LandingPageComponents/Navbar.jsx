@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { AppBar, Toolbar, Box, Button, useTheme } from '@mui/material';
 import ThemeToggle from '../ThemeToggle';
+import { useState } from 'react';
+import { Avatar } from '@mui/material';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -10,6 +12,7 @@ const navLinks = [
 
 const NavButton = ({ href, label, variant = 'text' }) => {
   const muiTheme = useTheme();
+  const [isUserLogin , setIsUserLogin] = useState(false)
   
   const baseStyles = {
     color: muiTheme.palette.text.primary,
@@ -21,6 +24,8 @@ const NavButton = ({ href, label, variant = 'text' }) => {
     overflow: 'hidden',
     transition: 'all 0.3s ease',
   };
+
+  
 
   const textStyles = {
     ...baseStyles,
@@ -115,20 +120,9 @@ const Logo = () => (
 export default function Navbar() {
   const muiTheme = useTheme();
   const isDark = muiTheme.palette.mode === 'dark';
-  
-  return (
-    <Box sx={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      zIndex: 1100,
-      padding: '20px',
-      display: 'flex',
-      justifyContent: 'center',
-      pointerEvents: 'none',
-    }}>
-      <AppBar position="relative" sx={{
+  const [isUserLogin, setIsUserLogin] = useState(true);
+
+  const appBarStyle = {
         background: isDark ? 'rgba(20, 25, 30, 0.4)' : 'rgba(255, 255, 255, 0.3)',
         backdropFilter: 'blur(25px) saturate(180%)',
         WebkitBackdropFilter: 'blur(25px) saturate(180%)',
@@ -152,7 +146,17 @@ export default function Navbar() {
           opacity: 0.5,
           pointerEvents: 'none',
         },
-      }}>
+      }
+  
+  return (
+    <Box sx={{
+      position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1100,
+      padding: '20px',
+      display: 'flex',
+      justifyContent: 'center',
+      pointerEvents: 'none',
+    }}>
+      <AppBar position="relative" sx={appBarStyle}>
         <Toolbar sx={{
           justifyContent: 'space-between',
           padding: { xs: '8px 24px', md: '10px 32px' },
@@ -166,7 +170,29 @@ export default function Navbar() {
             {navLinks.map(link => (
               <NavButton key={link.href} {...link} />
             ))}
-            <NavButton href="/login" label="Login" variant="contained" />
+
+            {/* <NavButton href="/login" label="Login" variant="contained" /> */}
+            
+            {isUserLogin ? (
+              <Avatar
+                src="/user.jpg"   // optional
+                alt="User"
+                sx={{
+                  marginX:2,
+                  width: 42,
+                  height: 42,
+                  cursor: 'pointer',
+                  border: '2px solid rgba(75, 140, 168, 0.6)',
+                  boxShadow: '0 4px 15px rgba(75, 140, 168, 0.35)',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    transform: 'scale(1.08)',
+                  },
+                }}
+              />
+            ) : (
+              <NavButton href="/login" label="Login" variant="contained" />
+            )}
             <ThemeToggle />
           </Box>
         </Toolbar>
