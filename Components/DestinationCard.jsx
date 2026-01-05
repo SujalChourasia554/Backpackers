@@ -11,7 +11,14 @@ export default function DestinationCard({ destination, category, isHovered, onHo
     <Card 
       onMouseEnter={() => onHover(true)}
       onMouseLeave={() => onHover(false)}
-      onClick={() => router.push(`/package/${destination.name.toLowerCase().replace(/\s+/g, '-')}?category=${category}`)}
+      onClick={() => {
+        // Use destination ID if available, otherwise use name
+        if (destination._id) {
+          router.push(`/package/${destination._id}?category=${category}`);
+        } else {
+          router.push(`/package/${destination.name.toLowerCase().replace(/\s+/g, '-')}?category=${category}`);
+        }
+      }}
       sx={{
         height: '100%',
         borderRadius: '20px',
@@ -28,7 +35,7 @@ export default function DestinationCard({ destination, category, isHovered, onHo
           component="div"
           sx={{
             height: 250,
-            backgroundImage: `url(${destination.image})`,
+            backgroundImage: `url(${destination.image || destination.images?.[0] || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&q=80'})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             transition: 'transform 0.3s ease',
@@ -43,21 +50,15 @@ export default function DestinationCard({ destination, category, isHovered, onHo
             right: 0,
             bottom: 0,
             background: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.3) 100%)',
-            display: 'flex',
-            alignItems: 'flex-end',
-            justifyContent: 'center',
-            pb: 2,
           }}
-        >
-          {Icon && <Icon sx={{ fontSize: 40, color: 'white', opacity: 0.9 }} />}
-        </Box>
+        />
       </Box>
       <CardContent sx={{ padding: '1.5rem' }}>
         <Typography variant="h5" component="h3" sx={{ fontWeight: 700, mb: 0.5, color: muiTheme.palette.text.primary, fontFamily: theme.typography.fontFamily.primary }}>
           {destination.name}
         </Typography>
         <Typography variant="body2" sx={{ color: colors.primary, mb: 1, fontWeight: 500 }}>
-          📍 {destination.location}
+          📍 {destination.location || `${destination.name}, ${destination.state || 'India'}`}
         </Typography>
         <Typography variant="body2" sx={{ color: muiTheme.palette.text.secondary, lineHeight: 1.6 }}>
           {destination.description}
