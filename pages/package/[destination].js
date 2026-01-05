@@ -39,10 +39,14 @@ export default function PackagePage() {
           // Try to find by name
           const categoryMap = {
             'beaches': 'Beach',
+            'beach': 'Beach',
             'mountains': 'Mountains & Outdoors',
-            'cultural': 'Culture & Heritage'
+            'mountain': 'Mountains & Outdoors',
+            'cultural': 'Culture & Heritage',
+            'culture': 'Culture & Heritage'
           };
-          const backendCategory = category ? categoryMap[category] : null;
+          const normalizedCat = category?.toLowerCase();
+          const backendCategory = normalizedCat ? (categoryMap[normalizedCat] || category) : null;
           dest = await findDestinationByName(destination.replace(/-/g, ' '), backendCategory);
           
           if (dest) {
@@ -89,8 +93,10 @@ export default function PackagePage() {
   };
 
   const destinationName = destinationData?.name || destination?.replace(/-/g, ' ') || 'Destination';
-  const themeColors = getThemeColors(category);
-  const heroImage = destinationData?.images?.[0] || getHeroImage(category);
+  // Normalize category to lowercase for theme colors
+  const normalizedCategory = category?.toLowerCase() || category;
+  const themeColors = getThemeColors(normalizedCategory);
+  const heroImage = destinationData?.images?.[0] || getHeroImage(normalizedCategory);
   
   // Filter packages by budget
   const filteredPackages = packages.filter(pkg => {
@@ -138,11 +144,11 @@ export default function PackagePage() {
         </Box>
       </Box>
 
-      <Container maxWidth="xl" sx={{ mt: '-80px', position: 'relative', zIndex: 10 }}>
-        <Grid container spacing={4}>
+      <Container maxWidth="xl" sx={{ mt: '-80px', position: 'relative', zIndex: 10, pb: 4 }}>
+        <Grid container spacing={4} sx={{ alignItems: 'flex-start' }}>
           {/* Sidebar */}
           <Grid item xs={12} md={3}>
-            <Card sx={{ padding: '2rem', borderRadius: '20px', boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)', position: 'sticky', top: '100px' }}>
+            <Card sx={{ padding: '2rem', borderRadius: '20px', boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)', position: 'sticky', top: '100px', mb: { xs: 3, md: 0 } }}>
               <Typography variant="h6" sx={{ mb: 1.5, fontWeight: 700, color: themeColors.primary }}>Free Cancellation</Typography>
               <Typography variant="body2" sx={{ mb: 2, color: muiTheme.palette.text.secondary }}>Book your trip worry-free!</Typography>
               <Typography variant="h6" sx={{ mb: 1, fontWeight: 700, color: muiTheme.palette.text.primary }}>Budget</Typography>
@@ -180,13 +186,41 @@ export default function PackagePage() {
             <Card sx={{ padding: '2rem', mb: 3, borderRadius: '20px', boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)', background: `linear-gradient(135deg, ${themeColors.light} 0%, white 100%)` }}>
               <Typography variant="h4" sx={{ mb: 1.5, fontWeight: 700, color: themeColors.primary, textAlign: 'center' }}>Enter Your Budget</Typography>
               <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: { xs: 'wrap', sm: 'nowrap' } }}>
-                <TextField fullWidth type="number" value={budget} onChange={(e) => handleBudgetChange(e.target.value)} placeholder="25,000" inputProps={{ min: 0, max: 100000 }} InputProps={{ startAdornment: <Typography sx={{ mr: 1, color: muiTheme.palette.text.primary, fontWeight: 600 }}>₹</Typography> }} sx={{ '& .MuiOutlinedInput-root': { borderRadius: '12px', fontSize: '1.25rem', fontWeight: 600 } }} />
-                <Button variant="contained" size="large" sx={{ backgroundColor: themeColors.primary, padding: '14px 32px', borderRadius: '12px', fontSize: '1rem', fontWeight: 600, whiteSpace: 'nowrap', '&:hover': { backgroundColor: themeColors.dark } }}>Search Packages</Button>
+                <TextField 
+                  fullWidth 
+                  type="number" 
+                  value={budget} 
+                  onChange={(e) => handleBudgetChange(e.target.value)} 
+                  placeholder="25,000" 
+                  inputProps={{ min: 0, max: 100000 }} 
+                  InputProps={{ 
+                    startAdornment: <Typography sx={{ mr: 1, color: muiTheme.palette.text.primary, fontWeight: 600 }}>₹</Typography> 
+                  }} 
+                  sx={{ '& .MuiOutlinedInput-root': { borderRadius: '12px', fontSize: '1.25rem', fontWeight: 600 } }} 
+                />
+                <Button 
+                  variant="contained" 
+                  size="large" 
+                  sx={{ 
+                    backgroundColor: themeColors.primary, 
+                    padding: '14px 32px', 
+                    borderRadius: '12px', 
+                    fontSize: '1rem', 
+                    fontWeight: 600, 
+                    whiteSpace: 'nowrap', 
+                    '&:hover': { backgroundColor: themeColors.dark } 
+                  }}
+                >
+                  Search Packages
+                </Button>
               </Box>
-              <Typography variant="body2" sx={{ mt: 1, textAlign: 'center', color: muiTheme.palette.text.primary, fontSize: '0.95rem', fontWeight: 500 }}>Based on your budget, we suggest these {destinationName} packages.</Typography>
+              <Typography variant="body2" sx={{ mt: 1, textAlign: 'center', color: muiTheme.palette.text.primary, fontSize: '0.95rem', fontWeight: 500 }}>
+                Based on your budget, we suggest these {destinationName} packages.
+              </Typography>
             </Card>
 
-            <Grid container spacing={2.5}>
+            {filteredPackages.length > 0 ? (
+              <Grid container spacing={2.5}>
               {filteredPackages.map((pkg) => {
                 const totalPrice = pkg.budgetPerDay * pkg.totalDays;
                 const packageImage = pkg.images && pkg.images.length > 0 ? pkg.images[0] : heroImage;
@@ -215,7 +249,8 @@ export default function PackagePage() {
                   </Grid>
                 );
               })}
-            </Grid>
+              </Grid>
+            ) : null}
 
             {!isLoading && filteredPackages.length === 0 && packages.length > 0 && (
               <Box sx={{ textAlign: 'center', padding: '4rem 2rem', backgroundColor: muiTheme.palette.background.paper, borderRadius: '20px' }}>
