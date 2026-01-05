@@ -1,5 +1,5 @@
 import { Box, Typography, Container, Button, Card, CardContent } from "@mui/material";
-import Navbar from "@/Components/Navbar";
+import Navbar from "@/Components/LandingPageComponents/Navbar";
 import themeConfig from "@/src/theme";
 import packagesData from "@/src/data/packages";
 import { hotelOptions, restaurantOptions } from "@/src/data/customization-options";

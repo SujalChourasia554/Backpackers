@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Box, Container, Grid, Typography, Button, Card, CardContent, TextField, Slider, FormControl, Select, MenuItem, Chip, CircularProgress, Alert, useTheme } from '@mui/material';
-import Navbar from "@/Components/Navbar";
+import Navbar from "@/Components/LandingPageComponents/Navbar";
 import theme from '@/src/theme';
 import { getThemeColors, getHeroImage } from '@/utils/packageHelpers';
 import { fetchDestinationById, findDestinationByName, fetchPackagesByDestination } from '@/utils/api';

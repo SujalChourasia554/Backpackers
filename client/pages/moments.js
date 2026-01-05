@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import Navbar from "@/Components/Navbar";
+import Navbar from "@/Components/LandingPageComponents/Navbar";
 import ReelCard from "@/Components/ReelCard";
 import UploadDialog from "@/Components/UploadDialog";
-import HeroSection from "@/Components/HeroSection";
+import HeroSection from "@/Components/LandingPageComponents/HeroSection";
 import { Typography, Box, Container, Grid, useTheme } from '@mui/material';
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 import themeConfig from '@/src/theme';

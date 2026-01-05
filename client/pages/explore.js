@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Box, Container, Typography, Button, CircularProgress, Chip } from '@mui/material';
 import { useRouter } from 'next/router';
-import Navbar from "@/Components/Navbar";
+import Navbar from "@/Components/LandingPageComponents/Navbar";
 import SearchIcon from '@mui/icons-material/Search';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { fetchDestinationsByCategory } from '@/utils/api';

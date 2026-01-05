@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { AppBar, Toolbar, Box, Button, useTheme } from '@mui/material';
-import ThemeToggle from './ThemeToggle';
+import ThemeToggle from '../ThemeToggle';
 
 const navLinks = [
   { href: '/', label: 'Home' },

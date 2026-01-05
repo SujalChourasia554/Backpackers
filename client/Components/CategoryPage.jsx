@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Navbar from "@/Components/Navbar";
+import Navbar from "@/Components/LandingPageComponents/Navbar";
 import DestinationCard from "@/Components/DestinationCard";
 import { Button, Typography, Box, Container, Grid, useTheme, CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';

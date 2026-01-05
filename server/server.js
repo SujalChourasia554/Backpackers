@@ -43,13 +43,8 @@ require("./routes/authRoutes")(app);
 app.use(require("./routes/packageRoutes"));
 app.use(require("./routes/itineraryRoutes"));
 app.use(require("./routes/bookingRoutes"));
-<<<<<<< Updated upstream
-// app.use(require("./routes/momentRoutes")); 
-//app.use(require("./routes/recommendationRoutes"));
-=======
 // app.use(require("./routes/momentRoutes"));
 app.use(require("./routes/recommendationRoutes"));
->>>>>>> Stashed changes
 // reviewRoutes can be added later
  
  
