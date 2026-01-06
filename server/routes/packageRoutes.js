@@ -96,4 +96,96 @@ router.get("/api/v1/packages/:id", async (req, res) => {
   }
 });
 
+// -------------------------------
+// GET alternative items for customization within budget
+// Query params: budgetPerDay (required), itemType (optional: stay, foodspot, localgem, activity)
+// -------------------------------
+router.get("/api/v1/packages/:id/alternatives", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { budgetPerDay, itemType } = req.query;
+
+    if (!isValidObjectId(id)) {
+      return res.status(400).json({ message: "Invalid package id" });
+    }
+
+    const packageData = await Package.findById(id).lean();
+    if (!packageData) {
+      return res.status(404).json({ message: "Package not found" });
+    }
+
+    const destinationId = packageData.destinationId;
+    const budget = budgetPerDay ? Number(budgetPerDay) : packageData.budgetPerDay;
+
+    // Define budget ranges for each item type (as percentage of total budget)
+    const stayBudget = budget * 0.6; // 60% for accommodation
+    const foodBudget = budget * 0.3; // 30% for food
+    const activityBudget = budget * 0.1; // 10% for activities
+
+    // Build filters for each item type
+    const filters = {
+      stay: {
+        destinationId,
+        itemType: "stay",
+        price: { $lte: stayBudget }
+      },
+      foodspot: {
+        destinationId,
+        itemType: "foodspot",
+        price: { $lte: foodBudget }
+      },
+      localgem: {
+        destinationId,
+        itemType: "localgem"
+      },
+      activity: {
+        destinationId,
+        itemType: "activity",
+        price: { $lte: activityBudget }
+      }
+    };
+
+    // If specific itemType requested, return only that
+    if (itemType && filters[itemType]) {
+      const items = await DestinationItem.find(filters[itemType])
+        .sort({ price: 1, rating: -1 })
+        .lean();
+      
+      return res.status(200).json({
+        message: "OK",
+        itemType,
+        budget: itemType === "stay" ? stayBudget : itemType === "foodspot" ? foodBudget : itemType === "activity" ? activityBudget : null,
+        count: items.length,
+        response: items
+      });
+    }
+
+    // Otherwise return all alternatives grouped by type
+    const [stays, foodSpots, localGems, activities] = await Promise.all([
+      DestinationItem.find(filters.stay).sort({ price: 1, rating: -1 }).lean(),
+      DestinationItem.find(filters.foodspot).sort({ price: 1, rating: -1 }).lean(),
+      DestinationItem.find(filters.localgem).sort({ rating: -1 }).lean(),
+      DestinationItem.find(filters.activity).sort({ price: 1, rating: -1 }).lean()
+    ]);
+
+    res.status(200).json({
+      message: "OK",
+      budgetBreakdown: {
+        total: budget,
+        stay: stayBudget,
+        food: foodBudget,
+        activity: activityBudget
+      },
+      alternatives: {
+        stays,
+        foodSpots,
+        localGems,
+        activities
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 module.exports = router;

@@ -51,7 +51,12 @@ router.get("/api/v1/moments/:id", async (req, res) => {
 // CREATE moment
 router.post("/api/v1/moments/create", requireLogin, async (req, res) => {
   try {
-    const { videoUrl, caption, location, tags, destinationId } = req.body;
+    const { uploaderName, videoUrl, caption, location, tags, destinationId } = req.body;
+    
+    // Validate uploader name (mandatory)
+    if (!uploaderName || !uploaderName.trim()) {
+      return res.status(400).json({ message: "Uploader name is required" });
+    }
     
     if (!videoUrl || !isValidVideoUrl(videoUrl)) {
       return res.status(400).json({ message: "Valid video URL required" });
@@ -64,6 +69,7 @@ router.post("/api/v1/moments/create", requireLogin, async (req, res) => {
     
     const newMoment = await Moment.create({
       userId: req.user.id,
+      uploaderName: uploaderName.trim(),
       destinationId: destinationId || null,
       images: [],
       video: videoUrl,

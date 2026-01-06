@@ -2,7 +2,17 @@ import { Card, CardContent, Typography, Grid } from "@mui/material";
 import themeConfig from "@/src/theme";
 import OptionCard from "./OptionCard";
 
-export default function OptionsGrid({ title, options, selectedId, onSelect, priceLabel, budgetLimit, numberOfDays }) {
+export default function OptionsGrid({ 
+  title, 
+  options, 
+  selectedId, 
+  selectedIds = [], 
+  onSelect, 
+  priceLabel, 
+  budgetLimit, 
+  numberOfDays,
+  multiSelect = false 
+}) {
   // Filter options within budget limit (budgetLimit is total for all days)
   const filteredOptions = options.filter((option) => {
     const totalPrice = option.price * numberOfDays;
@@ -14,11 +24,25 @@ export default function OptionsGrid({ title, options, selectedId, onSelect, pric
 
   // Handle toggle: if already selected, unselect it; otherwise select it
   const handleToggle = (optionId) => {
-    if (selectedId === optionId) {
-      onSelect(null); // Unselect
+    if (multiSelect) {
+      // Multi-select mode
+      if (selectedIds.includes(optionId)) {
+        onSelect(selectedIds.filter(id => id !== optionId));
+      } else {
+        onSelect([...selectedIds, optionId]);
+      }
     } else {
-      onSelect(optionId); // Select
+      // Single select mode
+      if (selectedId === optionId) {
+        onSelect(null); // Unselect
+      } else {
+        onSelect(optionId); // Select
+      }
     }
+  };
+
+  const isSelected = (optionId) => {
+    return multiSelect ? selectedIds.includes(optionId) : selectedId === optionId;
   };
 
   return (
@@ -53,9 +77,9 @@ export default function OptionsGrid({ title, options, selectedId, onSelect, pric
             <Grid item xs={12} sm={6} md={3} key={option.id}>
               <OptionCard
                 option={option}
-                isSelected={selectedId === option.id}
+                isSelected={isSelected(option.id)}
                 onSelect={() => handleToggle(option.id)}
-                priceLabel={`₹${option.price.toLocaleString()}${priceLabel}`}
+                priceLabel={option.price > 0 ? `₹${option.price.toLocaleString()}${priceLabel}` : 'Free'}
               />
             </Grid>
           ))}
@@ -64,4 +88,3 @@ export default function OptionsGrid({ title, options, selectedId, onSelect, pric
     </Card>
   );
 }
-

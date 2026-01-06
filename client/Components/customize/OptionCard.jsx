@@ -78,29 +78,61 @@ export default function OptionCard({ option, isSelected, onSelect, priceLabel })
           <Typography variant="body2" sx={{ fontWeight: 600, color: themeConfig.colors.primary.main }}>
             {priceLabel}
           </Typography>
-          <Chip
-            label={`⭐ ${option.rating}`}
-            size="small"
-            sx={{
-              backgroundColor: "#fef3c7",
-              color: "#92400e",
-              fontWeight: 600,
-            }}
-          />
+          {option.rating > 0 && (
+            <Chip
+              label={`⭐ ${option.rating.toFixed(1)}`}
+              size="small"
+              sx={{
+                backgroundColor: "#fef3c7",
+                color: "#92400e",
+                fontWeight: 600,
+              }}
+            />
+          )}
         </Box>
-        {option.description.map((desc, idx) => (
+        {option.description && (
           <Typography
-            key={idx}
             variant="body2"
             sx={{
               fontSize: "12px",
               color: themeConfig.colors.text.muted,
               marginBottom: "4px",
+              display: "-webkit-box",
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
             }}
           >
-            • {desc}
+            {option.description}
           </Typography>
-        ))}
+        )}
+        {option.category && (
+          <Chip
+            label={option.category}
+            size="small"
+            sx={{
+              marginTop: "8px",
+              backgroundColor: themeConfig.colors.primary.light,
+              color: themeConfig.colors.primary.main,
+              fontWeight: 600,
+              fontSize: "11px",
+            }}
+          />
+        )}
+        {option.duration && (
+          <Typography
+            variant="caption"
+            sx={{
+              fontSize: "11px",
+              color: themeConfig.colors.text.muted,
+              marginTop: "4px",
+              display: "block",
+            }}
+          >
+            Duration: {option.duration}
+          </Typography>
+        )}
       </CardContent>
     </Card>
   );

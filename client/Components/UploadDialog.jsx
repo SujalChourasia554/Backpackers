@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Box, Typography, IconButton, Tabs, Tab, Alert } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import YouTubeIcon from '@mui/icons-material/YouTube';
@@ -9,6 +9,7 @@ import theme from '@/src/theme';
 export default function UploadDialog({ open, onClose, onSuccess }) {
   const [uploadType, setUploadType] = useState(0);
   const [formData, setFormData] = useState({
+    uploaderName: '',
     videoUrl: '',
     caption: '',
     location: '',
@@ -16,6 +17,27 @@ export default function UploadDialog({ open, onClose, onSuccess }) {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [userInfo, setUserInfo] = useState(null);
+
+  // Get logged-in user's info from localStorage when dialog opens
+  useEffect(() => {
+    if (open && typeof window !== 'undefined') {
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          setUserInfo(user);
+          // Auto-fill the uploader name with logged-in user's name
+          setFormData(prev => ({
+            ...prev,
+            uploaderName: user.name || ''
+          }));
+        } catch (err) {
+          console.error('Error parsing user data:', err);
+        }
+      }
+    }
+  }, [open]);
 
   const handleChange = (field) => (event) => {
     setFormData({ ...formData, [field]: event.target.value });
@@ -23,7 +45,14 @@ export default function UploadDialog({ open, onClose, onSuccess }) {
   };
 
   const handleClose = () => {
-    setFormData({ videoUrl: '', caption: '', location: '', tags: '' });
+    // Keep the uploader name from user info, reset other fields
+    setFormData({ 
+      uploaderName: userInfo?.name || '', 
+      videoUrl: '', 
+      caption: '', 
+      location: '', 
+      tags: '' 
+    });
     setUploadType(0);
     setError('');
     setLoading(false);
@@ -34,6 +63,13 @@ export default function UploadDialog({ open, onClose, onSuccess }) {
     try {
       setLoading(true);
       setError('');
+
+      // Validate name (mandatory)
+      if (!formData.uploaderName.trim()) {
+        setError('Please enter your name');
+        setLoading(false);
+        return;
+      }
 
       // Validate URL
       if (!formData.videoUrl.trim()) {
@@ -57,6 +93,7 @@ export default function UploadDialog({ open, onClose, onSuccess }) {
           'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
+          uploaderName: formData.uploaderName.trim(),
           videoUrl: formData.videoUrl.trim(),
           caption: formData.caption.trim(),
           location: formData.location.trim(),
@@ -137,6 +174,26 @@ export default function UploadDialog({ open, onClose, onSuccess }) {
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <TextField 
             fullWidth 
+            label="Your Name" 
+            placeholder="Enter your name"
+            variant="outlined" 
+            helperText={userInfo ? "Auto-filled from your profile. This name will be visible to everyone." : "This name will be visible to everyone"}
+            value={formData.uploaderName}
+            onChange={handleChange('uploaderName')}
+            required
+            error={!formData.uploaderName.trim() && error.includes('name')}
+            InputProps={{
+              readOnly: !!userInfo, // Make read-only if user is logged in
+            }}
+            sx={{
+              '& .MuiInputBase-input': {
+                backgroundColor: userInfo ? 'rgba(0, 0, 0, 0.02)' : 'transparent',
+              }
+            }}
+          />
+
+          <TextField 
+            fullWidth 
             label="Video URL" 
             placeholder={getPlaceholder()}
             variant="outlined" 
@@ -144,6 +201,7 @@ export default function UploadDialog({ open, onClose, onSuccess }) {
             value={formData.videoUrl}
             onChange={handleChange('videoUrl')}
             required
+            error={!formData.videoUrl.trim() && error.includes('URL')}
           />
           
           <TextField 

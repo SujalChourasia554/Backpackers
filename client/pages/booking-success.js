@@ -1,15 +1,80 @@
 import { useRouter } from "next/router";
-import { useState } from "react";
-import { Box, Container, Typography, Button, Card, CardContent, Divider } from "@mui/material";
+import { useState, useEffect } from "react";
+import { Box, Container, Typography, Button, Card, CardContent, Divider, CircularProgress } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import DownloadIcon from "@mui/icons-material/Download";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import Navbar from "@/Components/LandingPageComponents/Navbar";
 import themeConfig from "@/src/theme";
+import { generateReceipt, viewReceipt } from "@/utils/receiptGenerator";
 
 export default function BookingSuccess() {
   const router = useRouter();
-  const { payment_id, amount } = router.query;
-  const [bookingId] = useState(`BKP${Date.now()}`);
+  const { payment_id, amount, booking_id, itinerary_id } = router.query;
+  const [bookingData, setBookingData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+
+  // Fetch user data and booking details
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        try {
+          setUser(JSON.parse(userStr));
+        } catch (err) {
+          console.error('Error parsing user data:', err);
+        }
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    // Create mock booking data for now
+    // In production, fetch from API using booking_id or itinerary_id
+    if (payment_id && amount) {
+      const mockBooking = {
+        bookingId: booking_id || `BKP${Date.now()}`,
+        bookingDate: new Date().toISOString(),
+        customerName: user?.name || 'Guest User',
+        customerEmail: user?.email || 'guest@example.com',
+        customerPhone: user?.phone || '+91 9999999999',
+        packageName: 'Travel Package',
+        destination: 'Kerala',
+        travelStartDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString(),
+        travelEndDate: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toLocaleDateString(),
+        duration: 3,
+        paymentId: payment_id,
+        paymentMethod: 'Razorpay',
+        paymentStatus: 'Completed',
+        packageCost: parseInt(amount) || 0,
+        taxes: Math.round((parseInt(amount) || 0) * 0.05),
+        totalAmount: parseInt(amount) || 0,
+      };
+      setBookingData(mockBooking);
+      setLoading(false);
+    }
+  }, [payment_id, amount, booking_id, user]);
+
+  const handleDownloadReceipt = () => {
+    if (bookingData) {
+      generateReceipt(bookingData);
+    }
+  };
+
+  const handleViewReceipt = () => {
+    if (bookingData) {
+      viewReceipt(bookingData);
+    }
+  };
+
+  if (loading) {
+    return (
+      <Box sx={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Box
@@ -83,7 +148,7 @@ export default function BookingSuccess() {
                   Booking ID:
                 </Typography>
                 <Typography variant="body2" sx={{ fontWeight: 600, color: themeConfig.colors.text.primary }}>
-                  {bookingId}
+                  {bookingData?.bookingId || "N/A"}
                 </Typography>
               </Box>
 
@@ -92,7 +157,7 @@ export default function BookingSuccess() {
                   Payment ID:
                 </Typography>
                 <Typography variant="body2" sx={{ fontWeight: 600, color: themeConfig.colors.text.primary }}>
-                  {payment_id || "N/A"}
+                  {bookingData?.paymentId || "N/A"}
                 </Typography>
               </Box>
 
@@ -101,7 +166,7 @@ export default function BookingSuccess() {
                   Amount Paid:
                 </Typography>
                 <Typography variant="body2" sx={{ fontWeight: 600, color: "#10b981", fontSize: "18px" }}>
-                  ₹{amount ? parseInt(amount).toLocaleString() : "0"}
+                  ₹{bookingData?.totalAmount ? bookingData.totalAmount.toLocaleString() : "0"}
                 </Typography>
               </Box>
 
@@ -156,7 +221,24 @@ export default function BookingSuccess() {
             <Box sx={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
               <Button
                 variant="outlined"
+                startIcon={<VisibilityIcon />}
+                onClick={handleViewReceipt}
+                sx={{
+                  borderColor: themeConfig.colors.primary.main,
+                  color: themeConfig.colors.primary.main,
+                  padding: "12px 24px",
+                  fontSize: "14px",
+                  fontWeight: 600,
+                  borderRadius: "10px",
+                  textTransform: "none",
+                }}
+              >
+                View Receipt
+              </Button>
+              <Button
+                variant="outlined"
                 startIcon={<DownloadIcon />}
+                onClick={handleDownloadReceipt}
                 sx={{
                   borderColor: themeConfig.colors.primary.main,
                   color: themeConfig.colors.primary.main,
