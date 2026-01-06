@@ -1,14 +1,14 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose")
-const cors = require("cors");
+// const cors = require("cors");
  
 require("dotenv").config();
  
-app.use(cors({
-    origin: ['http://localhost:3000', 'http://localhost:3001'], // Allow your Next.js app
-    credentials: true
-  }));
+// app.use(cors({
+//     origin: ['http://localhost:3000', 'http://localhost:3001',''], // Allow your Next.js app
+//     credentials: true
+//   }));
  
 //middleware
 app.use(express.json());
