@@ -14,9 +14,9 @@ export default function DestinationCard({ destination, category, isHovered, onHo
       onClick={() => {
         // Use destination ID if available, otherwise use name
         if (destination._id) {
-          router.push(`/itinerary/${destination._id}?category=${category}`);
+          router.push(`/package/${destination._id}?category=${category}`);
         } else {
-          router.push(`/itinerary/${destination.name.toLowerCase().replace(/\s+/g, '-')}?category=${category}`);
+          router.push(`/package/${destination.name.toLowerCase().replace(/\s+/g, '-')}?category=${category}`);
         }
       }}
       sx={{

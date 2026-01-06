@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Box, Typography, Container, Button, IconButton } from "@mui/material";
-import Navbar from "@/Components/Navbar";
+import Navbar from "@/Components/LandingPageComponents/Navbar";
 import themeConfig from "@/src/theme";
 import { hotelOptions, restaurantOptions } from "@/src/data/customization-options";
 import packagesData from "@/src/data/packages";
