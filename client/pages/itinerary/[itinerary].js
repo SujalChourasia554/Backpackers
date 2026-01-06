@@ -74,6 +74,30 @@ export default function Itinerary() {
     const pkg = backendData; // All package fields are at root level
     const defaultItems = backendData.defaultItems || {};
     
+    // DEBUG: Log to see what we're getting
+    console.log('Package data received:', {
+      budgetPerDay: pkg.budgetPerDay,
+      budgetPerDayType: typeof pkg.budgetPerDay,
+      allKeys: Object.keys(pkg)
+    });
+    
+    // Extract and validate budgetPerDay - handle all edge cases
+    let budgetPerDay = 0;
+    if (pkg.budgetPerDay !== undefined && pkg.budgetPerDay !== null) {
+      // Convert to number if it's a string
+      budgetPerDay = typeof pkg.budgetPerDay === 'string' 
+        ? parseFloat(pkg.budgetPerDay) 
+        : Number(pkg.budgetPerDay);
+      
+      // Ensure it's a valid number
+      if (isNaN(budgetPerDay) || budgetPerDay < 0) {
+        console.warn('Invalid budgetPerDay value:', pkg.budgetPerDay, 'defaulting to 0');
+        budgetPerDay = 0;
+      }
+    } else {
+      console.warn('budgetPerDay is missing from package data, defaulting to 0');
+    }
+    
     // Create included items from destination items
     const includedItems = [];
     
@@ -174,12 +198,22 @@ export default function Itinerary() {
       });
     }
 
+    // Format budget string - use the validated budgetPerDay value
+    const budgetString = budgetPerDay > 0 
+      ? `₹${budgetPerDay.toLocaleString('en-IN')}/day`
+      : '₹0/day';
+
+    console.log('Final budget values:', {
+      budgetPerDay,
+      budgetString
+    });
+
     return {
       name: pkg.name,
       description: `Experience the best of ${destination?.name || 'this destination'} with our curated ${pkg.name}`,
       heroImage: pkg.images?.[0] || destination?.images?.[0] || "/images/destination-placeholder.jpg",
-      budget: `₹${pkg.budgetPerDay?.toLocaleString() || '0'}/day`,
-      budgetPerDay: pkg.budgetPerDay,
+      budget: budgetString, // Use the validated and formatted budget
+      budgetPerDay: budgetPerDay, // Store numeric value for calculations
       includedItems,
       itineraryDays,
       packageId: pkg._id

@@ -243,14 +243,7 @@ export default function Login() {
                 Enter your personal account to explore amazing destinations
               </Typography>
 
-              <Link href="/signup" style={{ textDecoration: 'none' }}>
-                <Button
-                  variant="outlined"
-                  sx={signupButtonStyle}
-                >
-                  SIGN UP
-                </Button>
-              </Link>
+              
             </Box>
           </Box>
         </Card>
