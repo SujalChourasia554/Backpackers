@@ -14,9 +14,9 @@ export default function DestinationCard({ destination, category, isHovered, onHo
       onClick={() => {
         // Use destination ID if available, otherwise use name
         if (destination._id) {
-          router.push(`/itinerary/${destination._id}?category=${category}`);
+          router.push(`/package/${destination._id}?category=${category}`);
         } else {
-          router.push(`/itinerary/${destination.name.toLowerCase().replace(/\s+/g, '-')}?category=${category}`);
+          router.push(`/package/${destination.name.toLowerCase().replace(/\s+/g, '-')}?category=${category}`);
         }
       }}
       sx={{
@@ -58,7 +58,15 @@ export default function DestinationCard({ destination, category, isHovered, onHo
           {destination.name}
         </Typography>
         <Typography variant="body2" sx={{ color: colors.primary, mb: 1, fontWeight: 500 }}>
-          📍 {destination.location || `${destination.name}, ${destination.state || 'India'}`}
+          📍 {(() => {
+            const loc = destination.location;
+            if (!loc) return `${destination.name}, ${destination.state || 'India'}`;
+            if (typeof loc === 'string') return loc;
+            if (typeof loc === 'object' && loc !== null && !Array.isArray(loc)) {
+              return `${destination.name}, ${destination.state || 'India'}`;
+            }
+            return String(loc);
+          })()}
         </Typography>
         <Typography variant="body2" sx={{ color: muiTheme.palette.text.secondary, lineHeight: 1.6 }}>
           {destination.description}

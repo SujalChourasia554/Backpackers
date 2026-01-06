@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const User = mongoose.model("users");
 const requireLogin = require("../middleware/requireLogin");
 
-const otpLength = 6;
+const otpLength = 4;
 const OTP_EXPIRY_MINUTES = 10;
 
 module.exports = (app) => {
@@ -22,7 +22,7 @@ module.exports = (app) => {
       }
 
       const user = await User.findOne({ email });
-
+      
       // CASE 1: User exists with password - verify password
       if (user && user.password) {
         if (user.password === password) {

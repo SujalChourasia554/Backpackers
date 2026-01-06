@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Box, Container, Typography, Button, CircularProgress, Chip } from '@mui/material';
 import { useRouter } from 'next/router';
-import Navbar from "@/Components/Navbar";
+import Navbar from "@/Components/LandingPageComponents/Navbar";
 import SearchIcon from '@mui/icons-material/Search';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { fetchDestinationsByCategory } from '@/utils/api';
@@ -175,7 +175,7 @@ export default function Explore() {
               {displayedDestinations.map(dest => (
                 <Box 
                   key={dest._id} 
-                  onClick={() => router.push(`/itinerary/${dest._id}?category=${dest.category}`)} 
+                  onClick={() => router.push(`/package/${dest._id}?category=${dest.category}`)} 
                   sx={{ 
                     cursor: 'pointer', 
                     borderRadius: 3, 
@@ -200,7 +200,15 @@ export default function Explore() {
                       {dest.name}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" noWrap>
-                      {dest.location || dest.state}
+                      {(() => {
+                        const loc = dest.location;
+                        if (!loc) return dest.state || dest.name;
+                        if (typeof loc === 'string') return loc;
+                        if (typeof loc === 'object' && loc !== null && !Array.isArray(loc)) {
+                          return dest.state || dest.name;
+                        }
+                        return String(loc);
+                      })()}
                     </Typography>
                   </Box>
                 </Box>

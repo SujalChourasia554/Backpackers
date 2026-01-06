@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Box, Container, Typography, Button, Card, CardContent, Divider } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import DownloadIcon from "@mui/icons-material/Download";
-import Navbar from "@/Components/Navbar";
+import Navbar from "@/Components/LandingPageComponents/Navbar";
 import themeConfig from "@/src/theme";
 
 export default function BookingSuccess() {

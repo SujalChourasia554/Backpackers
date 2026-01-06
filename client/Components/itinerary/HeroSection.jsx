@@ -24,6 +24,8 @@ export default function HeroSection({ name, description, heroImage, budget }) {
           backgroundImage: `url('${heroImage}')`,
           backgroundSize: "cover",
           backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          transition: "transform 0.5s ease",
         }}
       />
       <Box
@@ -52,13 +54,14 @@ export default function HeroSection({ name, description, heroImage, budget }) {
         <Typography
           variant="h1"
           sx={{
-            fontSize: { xs: "56px", md: "80px" },
-            fontWeight: 900,
+            fontSize: { xs: "28px", md: "36px" },
+            fontWeight: 800,
             color: themeConfig.colors.text.secondary,
-            textShadow: "4px 4px 20px rgba(0,0,0,0.5)",
+            textShadow: "2px 2px 12px rgba(0,0,0,0.6)",
             fontFamily: themeConfig.fonts.heading,
-            letterSpacing: "-2px",
-            marginBottom: "12px",
+            letterSpacing: "-0.5px",
+            marginBottom: "8px",
+            lineHeight: 1.2,
           }}
         >
           {name}
@@ -66,14 +69,14 @@ export default function HeroSection({ name, description, heroImage, budget }) {
         {description && (
           <Typography
             sx={{
-              fontSize: { xs: "16px", md: "20px" },
-              color: themeConfig.colors.text.secondary,
-              textShadow: "2px 2px 8px rgba(0,0,0,0.4)",
+              fontSize: { xs: "12px", md: "14px" },
+              color: "rgba(255, 255, 255, 0.95)",
+              textShadow: "1px 1px 6px rgba(0,0,0,0.5)",
               fontFamily: themeConfig.fonts.primary,
               fontWeight: 400,
-              maxWidth: "800px",
-              lineHeight: 1.6,
-              marginBottom: "12px",
+              maxWidth: "700px",
+              lineHeight: 1.4,
+              marginBottom: "10px",
             }}
           >
             {description}
@@ -82,21 +85,25 @@ export default function HeroSection({ name, description, heroImage, budget }) {
         {budget && (
           <Box
             sx={{
-              backgroundColor: "rgba(255, 255, 255, 0.2)",
-              backdropFilter: "blur(10px)",
-              padding: "8px 20px",
-              borderRadius: "20px",
-              border: "1px solid rgba(255, 255, 255, 0.3)",
-              display: "inline-block",
+              backgroundColor: "rgba(255, 255, 255, 0.25)",
+              backdropFilter: "blur(12px)",
+              padding: "6px 18px",
+              borderRadius: "16px",
+              border: "1.5px solid rgba(255, 255, 255, 0.4)",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
             }}
           >
             <Typography
               sx={{
-                fontSize: { xs: "14px", md: "16px" },
+                fontSize: { xs: "12px", md: "14px" },
                 color: themeConfig.colors.text.secondary,
-                textShadow: "1px 1px 4px rgba(0,0,0,0.3)",
+                textShadow: "1px 1px 4px rgba(0,0,0,0.4)",
                 fontFamily: themeConfig.fonts.primary,
-                fontWeight: 600,
+                fontWeight: 700,
+                letterSpacing: "0.5px",
               }}
             >
               {budget}

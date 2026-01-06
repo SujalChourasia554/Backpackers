@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 import { Box, Typography, Container, Button, IconButton } from "@mui/material";
+<<<<<<< HEAD
 import Navbar from "@/Components/Navbar";
 =======
 =======
@@ -10,6 +11,9 @@ import Navbar from "@/Components/Navbar";
 import { Box, Typography, Container, Button, IconButton, CircularProgress } from "@mui/material";
 import Navbar from "@/Components/LandingPageComponents/Navbar";
 >>>>>>> Stashed changes
+=======
+import Navbar from "@/Components/LandingPageComponents/Navbar";
+>>>>>>> ad28d1512a1046f4a0a255ed5da9da05b078e780
 import themeConfig from "@/src/theme";
 import { hotelOptions, restaurantOptions } from "@/src/data/customization-options";
 <<<<<<< Updated upstream

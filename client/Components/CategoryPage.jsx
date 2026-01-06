@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Navbar from "@/Components/Navbar";
+import Navbar from "@/Components/LandingPageComponents/Navbar";
 import DestinationCard from "@/Components/DestinationCard";
 import { Button, Typography, Box, Container, Grid, useTheme, CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -22,18 +22,31 @@ const HeroSection = styled(Box)({
 });
 
 // Helper: Transform destination data
-const transformDestination = (dest) => ({
-  _id: dest._id,
-  name: dest.name,
-  location: dest.location || `${dest.name}, ${dest.state || 'India'}`,
-  description: dest.description || `Discover the amazing ${dest.name}`,
-  image: dest.images?.[0] || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&q=80',
-  rating: dest.rating,
-  totalReviews: dest.totalReviews,
-  budgetPerDay: dest.budgetPerDay,
-  state: dest.state,
-  category: dest.category,
-});
+const transformDestination = (dest) => {
+  // Helper to safely convert location to string
+  const getLocationString = (loc) => {
+    if (!loc) return `${dest.name}, ${dest.state || 'India'}`;
+    if (typeof loc === 'string') return loc;
+    if (typeof loc === 'object' && loc !== null && !Array.isArray(loc)) {
+      // It's an object, use fallback
+      return `${dest.name}, ${dest.state || 'India'}`;
+    }
+    return String(loc);
+  };
+
+  return {
+    _id: dest._id,
+    name: dest.name,
+    location: getLocationString(dest.location),
+    description: dest.description || `Discover the amazing ${dest.name}`,
+    image: dest.images?.[0] || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&q=80',
+    rating: dest.rating,
+    totalReviews: dest.totalReviews,
+    budgetPerDay: dest.budgetPerDay,
+    state: dest.state,
+    category: dest.category,
+  };
+};
 
 export default function CategoryPage({ category, config, icon: Icon }) {
   const [hoveredCard, setHoveredCard] = useState(null);
