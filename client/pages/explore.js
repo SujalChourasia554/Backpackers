@@ -175,7 +175,7 @@ export default function Explore() {
               {displayedDestinations.map(dest => (
                 <Box 
                   key={dest._id} 
-                  onClick={() => router.push(`/package/${dest._id}?category=${dest.category}`)} 
+                  onClick={() => router.push(`/itinerary/${dest._id}?category=${dest.category}`)} 
                   sx={{ 
                     cursor: 'pointer', 
                     borderRadius: 3, 

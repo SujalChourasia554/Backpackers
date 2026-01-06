@@ -105,7 +105,7 @@ export default function PackagePage() {
   });
 
   const handlePackageClick = (packageId) => {
-    router.push(`/${packageId}`);
+    router.push(`/itinerary/${packageId}`);
   };
 
   if (isLoading) {
