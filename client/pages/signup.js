@@ -1,14 +1,29 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { Box, TextField, Button, Typography, Card, Container, IconButton } from '@mui/material';
+import { Box, TextField, Button, Typography, Card, Container, IconButton, Snackbar, Alert } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import theme from '@/src/theme';
 
 export default function Signup() {
   const router = useRouter();
   const [otp, setOtp] = useState(['', '', '', '']);
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [openSnackbar, setOpenSnackbar] = useState(false);
   const inputRefs = [useRef(), useRef(), useRef(), useRef()];
+
+  useEffect(() => {
+    // Get pending email from localStorage
+    const pendingEmail = localStorage.getItem('pendingEmail');
+    if (pendingEmail) {
+      setEmail(pendingEmail);
+    } else {
+      // If no pending email, redirect to login
+      router.push('/login');
+    }
+  }, [router]);
 
   const handleOtpChange = (index, value) => {
     if (value.length > 1) return;
@@ -43,12 +58,9 @@ export default function Signup() {
     inputRefs[nextIndex].current.focus();
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const otpValue = otp.join('');
-<<<<<<< Updated upstream
-    console.log('OTP:', otpValue);
-=======
     
     if (otpValue.length !== 4) {
       setError('Please enter a valid 4-digit OTP');
@@ -101,7 +113,7 @@ export default function Signup() {
         localStorage.removeItem('pendingEmail');
         // Dispatch event to update navbar
         window.dispatchEvent(new Event('auth-change'));
-        setLoading(false); // Add this to fix the loading state issue
+        setLoading(false);
         // Redirect to home page
         router.push('/');
       }
@@ -115,7 +127,6 @@ export default function Signup() {
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
->>>>>>> Stashed changes
   };
 
   return (
@@ -300,6 +311,7 @@ export default function Signup() {
                     onChange={(e) => handleOtpChange(index, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(index, e)}
                     required
+                    disabled={loading}
                     sx={{
                       width: '70px',
                       '& .MuiOutlinedInput-root': {
@@ -326,12 +338,13 @@ export default function Signup() {
                   mb: 1.5,
                 }}
               >
-                Verify OTP
+                Verify OTP sent to {email}
               </Typography>
               <Button
                 type="submit"
                 variant="contained"
                 fullWidth
+                disabled={loading}
                 sx={{
                   mt: 5,
                   padding: '16px',
@@ -349,12 +362,23 @@ export default function Signup() {
                   },
                 }}
               >
-                SIGN UP
+                {loading ? 'VERIFYING...' : 'SIGN UP'}
               </Button>
             </Box>
           </Box>
         </Card>
       </Container>
+
+      <Snackbar 
+        open={openSnackbar} 
+        autoHideDuration={6000} 
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
+          {error}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

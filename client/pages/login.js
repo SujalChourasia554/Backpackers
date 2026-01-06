@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { Box, TextField, Button, Typography, Card, Container, IconButton } from '@mui/material';
+import { Box, TextField, Button, Typography, Card, Container, IconButton, Snackbar, Alert } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 export default function Login() {
@@ -9,12 +9,12 @@ export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-<<<<<<< Updated upstream
-    console.log({ email, password });
-=======
     setError('');
     setLoading(true);
 
@@ -72,7 +72,6 @@ export default function Login() {
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
->>>>>>> Stashed changes
   };
 
   /* ===================== STYLES ===================== */
@@ -185,6 +184,7 @@ const signupButtonStyle = {
                 required
                 sx={textFieldStyles}
                 onChange={(e) => setEmail(e.target.value)}
+                disabled={loading}
               />
               <TextField
                 type="password"
@@ -194,6 +194,7 @@ const signupButtonStyle = {
                 required
                 sx={textFieldStyles}
                 onChange={(e) => setPassword(e.target.value)}
+                disabled={loading}
               />
 
               <Typography fontSize={14} color="#777">
@@ -205,11 +206,10 @@ const signupButtonStyle = {
 
               <Button
                 type="submit"
-                // variant="contained"
-                // fullWidth
+                disabled={loading}
                 sx={{ ...authButtonStyles, bgcolor: '#1a1a1a' }}
               >
-                SIGN IN
+                {loading ? 'SIGNING IN...' : 'SIGN IN'}
               </Button>
             </Box>
           </Box>
@@ -238,6 +238,17 @@ const signupButtonStyle = {
           </Box>
         </Card>
       </Container>
+
+      <Snackbar 
+        open={openSnackbar} 
+        autoHideDuration={6000} 
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
+          {error}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

@@ -5,32 +5,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import theme from '@/src/theme';
 
-<<<<<<< Updated upstream
-const FileUploadButton = ({ selectedFile, onFileChange }) => (
-  <Button component="label" variant="outlined" fullWidth startIcon={<CloudUploadIcon />} sx={{
-    padding: '3rem 2rem',
-    borderStyle: 'dashed',
-    borderWidth: 2,
-    borderColor: theme.colors.brand.primary,
-    color: theme.colors.brand.primary,
-    '&:hover': {
-      borderWidth: 2,
-      borderStyle: 'dashed',
-      backgroundColor: 'rgba(75, 140, 168, 0.05)',
-    }
-  }}>
-    <Box sx={{ textAlign: 'center' }}>
-      <Typography variant="body1" sx={{ fontWeight: 600, mb: 1 }}>
-        {selectedFile ? selectedFile.name : 'Click to Upload Video'}
-      </Typography>
-      <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-        MP4, MOV, AVI (Max 100MB)
-      </Typography>
-    </Box>
-    <input type="file" hidden accept="video/*" onChange={onFileChange} />
-  </Button>
-);
-=======
 export default function UploadDialog({ open, onClose, onSuccess }) {
   const [uploadType, setUploadType] = useState(0);
   const [formData, setFormData] = useState({
@@ -42,42 +16,18 @@ export default function UploadDialog({ open, onClose, onSuccess }) {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
->>>>>>> Stashed changes
 
-const VideoPreview = ({ previewUrl }) => (
-  previewUrl && (
-    <Box sx={{ mt: 2, borderRadius: '12px', overflow: 'hidden' }}>
-      <video src={previewUrl} controls style={{ width: '100%', maxHeight: '300px', objectFit: 'contain' }} />
-    </Box>
-  )
-);
-
-export default function UploadDialog({ open, onClose }) {
-  const [uploadType, setUploadType] = useState(0);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
-
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file && file.type.startsWith('video/')) {
-      setSelectedFile(file);
-      setPreviewUrl(URL.createObjectURL(file));
-    }
+  const handleChange = (field) => (event) => {
+    setFormData({ ...formData, [field]: event.target.value });
   };
 
   const handleClose = () => {
-<<<<<<< Updated upstream
-    setSelectedFile(null);
-    setPreviewUrl(null);
-=======
     setFormData({ userName: '', videoUrl: '', caption: '', location: '', tags: '' });
->>>>>>> Stashed changes
     setUploadType(0);
+    setError('');
     onClose();
   };
 
-<<<<<<< Updated upstream
-=======
   const handleSubmit = async () => {
     try {
       setLoading(true);
@@ -105,7 +55,8 @@ export default function UploadDialog({ open, onClose }) {
         return;
       }
 
-      const response = await fetch('/api/v1/moments/create', {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
+      const response = await fetch(`${API_BASE_URL}/api/v1/moments/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -166,7 +117,6 @@ export default function UploadDialog({ open, onClose }) {
     }
   };
 
->>>>>>> Stashed changes
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
       <DialogTitle sx={{ fontWeight: 700, fontSize: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -179,16 +129,17 @@ export default function UploadDialog({ open, onClose }) {
       <DialogContent>
         <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
           <Tabs value={uploadType} onChange={(e, newValue) => setUploadType(newValue)} centered>
-            <Tab icon={<CloudUploadIcon />} label="Upload Video" iconPosition="start" sx={{ fontWeight: 600 }} />
             <Tab icon={<YouTubeIcon />} label="YouTube URL" iconPosition="start" sx={{ fontWeight: 600 }} />
           </Tabs>
         </Box>
 
+        {error && (
+          <Typography color="error" sx={{ mb: 2 }}>
+            {error}
+          </Typography>
+        )}
+
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-<<<<<<< Updated upstream
-          <TextField fullWidth label="Video Title" placeholder="Enter a catchy title..." variant="outlined" />
-          <TextField fullWidth label="Location" placeholder="Where was this taken?" variant="outlined" />
-=======
           <TextField 
             fullWidth 
             label="Your Name" 
@@ -210,37 +161,54 @@ export default function UploadDialog({ open, onClose }) {
             onChange={handleChange('videoUrl')}
             required
           />
->>>>>>> Stashed changes
           
-          {uploadType === 0 ? (
-            <Box>
-              <FileUploadButton selectedFile={selectedFile} onFileChange={handleFileChange} />
-              <VideoPreview previewUrl={previewUrl} />
-            </Box>
-          ) : (
-            <TextField 
-              fullWidth 
-              label="YouTube Video URL" 
-              placeholder="https://youtube.com/watch?v=..." 
-              variant="outlined" 
-              helperText="Paste your YouTube video link here" 
-            />
-          )}
-          
-          <TextField fullWidth label="Description" placeholder="Tell us about your experience..." multiline rows={4} variant="outlined" />
-          <TextField fullWidth label="Tags" placeholder="beach, sunset, adventure (comma separated)" variant="outlined" />
+          <TextField 
+            fullWidth 
+            label="Caption" 
+            placeholder="Tell us about your experience..."
+            value={formData.caption}
+            onChange={handleChange('caption')}
+            multiline 
+            rows={4} 
+            variant="outlined" 
+          />
+
+          <TextField 
+            fullWidth 
+            label="Location" 
+            placeholder="Where was this taken?"
+            value={formData.location}
+            onChange={handleChange('location')}
+            variant="outlined" 
+          />
+
+          <TextField 
+            fullWidth 
+            label="Tags" 
+            placeholder="beach, sunset, adventure (comma separated)"
+            value={formData.tags}
+            onChange={handleChange('tags')}
+            variant="outlined" 
+          />
         </Box>
       </DialogContent>
       
       <DialogActions sx={{ padding: '1.5rem' }}>
-        <Button onClick={handleClose} sx={{ color: theme.colors.text.secondary }}>Cancel</Button>
-        <Button variant="contained" onClick={handleClose} sx={{
-          backgroundColor: theme.colors.brand.primary,
-          padding: '10px 24px',
-          borderRadius: '12px',
-          '&:hover': { backgroundColor: theme.colors.brand.primary }
-        }}>
-          Share Moment
+        <Button onClick={handleClose} sx={{ color: theme.colors.text.secondary }} disabled={loading}>
+          Cancel
+        </Button>
+        <Button 
+          variant="contained" 
+          onClick={handleSubmit} 
+          disabled={loading}
+          sx={{
+            backgroundColor: theme.colors.brand.primary,
+            padding: '10px 24px',
+            borderRadius: '12px',
+            '&:hover': { backgroundColor: theme.colors.brand.primary }
+          }}
+        >
+          {loading ? 'Sharing...' : 'Share Moment'}
         </Button>
       </DialogActions>
     </Dialog>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from "@/Components/LandingPageComponents/Navbar";
 import ReelCard from "@/Components/ReelCard";
 import UploadDialog from "@/Components/UploadDialog";
@@ -6,26 +6,11 @@ import HeroSection from "@/Components/LandingPageComponents/HeroSection";
 import { Typography, Box, Container, Grid, useTheme } from '@mui/material';
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 import themeConfig from '@/src/theme';
-import { travelReels } from '@/data/travelReels';
 
 export default function Moments() {
   const muiTheme = useTheme();
   const [hoveredCard, setHoveredCard] = useState(null);
   const [openUploadDialog, setOpenUploadDialog] = useState(false);
-<<<<<<< Updated upstream
-
-  const handleVideoHover = (id, isHovering) => {
-    setHoveredCard(isHovering ? id : null);
-    setPlayingVideo(isHovering ? id : null);
-  };
-
-  const toggleLike = (id) => {
-    setLikedVideos(prev => {
-      const newLikes = new Set(prev);
-      newLikes.has(id) ? newLikes.delete(id) : newLikes.add(id);
-      return newLikes;
-    });
-=======
   const [moments, setMoments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -40,7 +25,8 @@ export default function Moments() {
   const fetchMoments = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/v1/moments');
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
+      const response = await fetch(`${API_BASE_URL}/api/v1/moments`);
       const data = await response.json();
       
       if (data.success) {
@@ -78,7 +64,6 @@ export default function Moments() {
   const handleUploadSuccess = (newMoment) => {
     // Refresh moments list
     fetchMoments();
->>>>>>> Stashed changes
   };
 
   return (
@@ -97,21 +82,33 @@ export default function Moments() {
             </Typography>
           </Box>
 
-          <Grid container spacing={3}>
-            {travelReels.map((reel) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={reel.id}>
-                <ReelCard
-                  reel={reel}
-                  isHovered={hoveredCard === reel.id}
-                  onHover={handleVideoHover}
-                />
-              </Grid>
-            ))}
-          </Grid>
+          {loading ? (
+            <Typography>Loading moments...</Typography>
+          ) : error ? (
+            <Typography color="error">{error}</Typography>
+          ) : moments.length === 0 ? (
+            <Typography>No moments yet. Be the first to share!</Typography>
+          ) : (
+            <Grid container spacing={3}>
+              {moments.map((reel) => (
+                <Grid item xs={12} sm={6} md={4} lg={3} key={reel.id}>
+                  <ReelCard
+                    reel={reel}
+                    isHovered={hoveredCard === reel.id}
+                    onHover={handleVideoHover}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          )}
         </Container>
       </Box>
 
-      <UploadDialog open={openUploadDialog} onClose={() => setOpenUploadDialog(false)} />
+      <UploadDialog 
+        open={openUploadDialog} 
+        onClose={() => setOpenUploadDialog(false)} 
+        onSuccess={handleUploadSuccess}
+      />
       <Box sx={{ height: '4rem' }} />
     </Box>
   );
