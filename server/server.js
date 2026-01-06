@@ -25,6 +25,7 @@ mongoose
  
 //start server
 const port = process.env.PORT || 5001;
+const host = process.env.HOST || '0.0.0.0';
  
 require("./models/Destination");
 require("./models/DestinationItem");
@@ -48,6 +49,6 @@ app.use(require("./routes/recommendationRoutes"));
 // reviewRoutes can be added later
  
  
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+app.listen(port,host, () => {
+    console.log(`Server is running on $(host):${port}`);
 });
