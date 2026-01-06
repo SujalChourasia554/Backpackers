@@ -1,8 +1,5 @@
-import { Card, Box, Avatar, Typography, Chip, IconButton, useTheme } from '@mui/material';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import ShareIcon from '@mui/icons-material/Share';
+import { Card, Box, Avatar, Typography, Chip, useTheme } from '@mui/material';
+import { useState } from 'react';
 import theme from '@/src/theme';
 
 const getCategoryColor = (category) => {
@@ -14,55 +11,124 @@ const getCategoryColor = (category) => {
   return colors[category] || theme.colors.brand.primary;
 };
 
-const VideoContent = ({ reel, isPlaying, categoryColor }) => (
-  isPlaying ? (
-    <iframe
-      src={`${reel.videoUrl}?autoplay=1&mute=1&controls=0&loop=1&playlist=${reel.videoUrl.split('/').pop()}`}
-      style={{ width: '100%', height: '100%', border: 'none' }}
-      allow="autoplay; encrypted-media"
-      allowFullScreen
-    />
-  ) : (
-    <Box sx={{
-      width: '100%',
-      height: '100%',
-      backgroundImage: `url(${reel.thumbnail})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      position: 'relative',
-      '&::after': {
-        content: '""',
-        position: 'absolute',
-        inset: 0,
-        background: `linear-gradient(to bottom, transparent 0%, ${categoryColor}15 50%, rgba(0,0,0,0.4) 100%)`
-      }
-    }} />
-  )
-);
+// Helper function to convert video URLs to embeddable format
+const getEmbedUrl = (url) => {
+  if (!url) return null;
 
-const ActionButton = ({ icon, count, onClick, isActive, color, categoryColor }) => {
-  const muiTheme = useTheme();
+  // YouTube
+  if (url.includes('youtube.com') || url.includes('youtu.be')) {
+    let videoId = '';
+    if (url.includes('youtu.be/')) {
+      videoId = url.split('youtu.be/')[1].split('?')[0];
+    } else if (url.includes('watch?v=')) {
+      videoId = url.split('watch?v=')[1].split('&')[0];
+    } else if (url.includes('embed/')) {
+      return url; // Already in embed format
+    }
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+  }
+
+  // Instagram
+  if (url.includes('instagram.com')) {
+    if (url.includes('/reel/')) {
+      const reelId = url.split('/reel/')[1].split('/')[0].split('?')[0];
+      return `https://www.instagram.com/reel/${reelId}/embed`;
+    }
+    if (url.includes('/p/')) {
+      const postId = url.split('/p/')[1].split('/')[0].split('?')[0];
+      return `https://www.instagram.com/p/${postId}/embed`;
+    }
+  }
+
+  // Google Drive
+  if (url.includes('drive.google.com')) {
+    if (url.includes('/file/d/')) {
+      const fileId = url.split('/file/d/')[1].split('/')[0];
+      return `https://drive.google.com/file/d/${fileId}/preview`;
+    }
+  }
+
+  // If no specific format matched, return the original URL
+  return url;
+};
+
+// Helper function to get the original video URL for opening
+const getOriginalUrl = (url) => {
+  if (!url) return null;
+  
+  // If it's already an embed URL, convert it back
+  if (url.includes('youtube.com/embed/')) {
+    const videoId = url.split('embed/')[1].split('?')[0];
+    return `https://www.youtube.com/watch?v=${videoId}`;
+  }
+  
+  if (url.includes('instagram.com') && url.includes('/embed')) {
+    return url.replace('/embed', '');
+  }
+  
+  if (url.includes('drive.google.com') && url.includes('/preview')) {
+    return url.replace('/preview', '/view');
+  }
+  
+  return url;
+};
+
+const VideoContent = ({ reel, categoryColor, onVideoClick }) => {
+  const embedUrl = getEmbedUrl(reel.videoUrl);
+  
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, cursor: onClick ? 'pointer' : 'default' }} onClick={onClick}>
-      <IconButton size="small" sx={{
-        color: isActive ? color : muiTheme.palette.text.primary,
-        backgroundColor: isActive ? `${color}10` : 'transparent',
-        '&:hover': { backgroundColor: isActive ? `${color}15` : `${categoryColor}15` }
-      }}>
-        {icon}
-      </IconButton>
-      {count !== undefined && (
-        <Typography variant="body2" sx={{ fontWeight: 600, color: muiTheme.palette.text.primary }}>
-          {count}
-        </Typography>
+    <Box 
+      onClick={onVideoClick}
+      sx={{ 
+        width: '100%', 
+        height: '100%', 
+        position: 'relative',
+        cursor: 'pointer'
+      }}
+    >
+      {embedUrl ? (
+        <iframe
+          src={`${embedUrl}?autoplay=1&mute=1&loop=1`}
+          style={{ 
+            width: '100%', 
+            height: '100%', 
+            border: 'none',
+            pointerEvents: 'auto'
+          }}
+          allow="autoplay; encrypted-media"
+          allowFullScreen
+        />
+      ) : (
+        <Box sx={{
+          width: '100%',
+          height: '100%',
+          backgroundImage: `url(${reel.thumbnail})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          position: 'relative',
+          '&::after': {
+            content: '""',
+            position: 'absolute',
+            inset: 0,
+            background: `linear-gradient(to bottom, transparent 0%, ${categoryColor}15 50%, rgba(0,0,0,0.4) 100%)`
+          }
+        }} />
       )}
     </Box>
   );
 };
 
-export default function ReelCard({ reel, isHovered, isPlaying, onHover, onLike, isLiked }) {
+export default function ReelCard({ reel, isHovered, onHover }) {
   const muiTheme = useTheme();
   const categoryColor = getCategoryColor(reel.category);
+  
+  const handleVideoClick = (e) => {
+    e.stopPropagation();
+    const originalUrl = getOriginalUrl(reel.videoUrl);
+    if (originalUrl) {
+      window.open(originalUrl, '_blank');
+    }
+  };
   
   return (
     <Card 
@@ -92,39 +158,57 @@ export default function ReelCard({ reel, isHovered, isPlaying, onHover, onLike, 
       }}
     >
       <Box sx={{ position: 'relative', height: '100%', backgroundColor: muiTheme.palette.mode === 'dark' ? '#1a1f26' : '#f5f5f5' }}>
-        <VideoContent reel={reel} isPlaying={isPlaying} categoryColor={categoryColor} />
+        <VideoContent 
+          reel={reel} 
+          categoryColor={categoryColor}
+          onVideoClick={handleVideoClick}
+        />
 
         <Box sx={{
           position: 'absolute',
           bottom: 0,
           left: 0,
           right: 0,
-          background: muiTheme.palette.mode === 'dark' 
-            ? 'linear-gradient(to top, rgba(26, 31, 38, 0.95) 0%, rgba(26, 31, 38, 0.8) 60%, transparent 100%)'
-            : 'linear-gradient(to top, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.85) 60%, transparent 100%)',
-          padding: '2rem 1.5rem 1.5rem',
+          padding: '1.5rem',
+          background: `linear-gradient(to top, ${muiTheme.palette.mode === 'dark' ? 'rgba(0,0,0,0.95)' : 'rgba(255,255,255,0.95)'} 0%, transparent 100%)`,
           backdropFilter: 'blur(10px)',
-          borderTop: `1px solid ${muiTheme.palette.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}`
+          zIndex: 5
         }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.75 }}>
-            <Avatar src={reel.avatar} sx={{
-              width: 36,
-              height: 36,
-              mr: 1,
-              border: `2px solid ${categoryColor}`,
-              boxShadow: `0 2px 8px ${categoryColor}40`
-            }} />
-            <Typography variant="body2" sx={{ fontWeight: 700, color: muiTheme.palette.text.primary, fontSize: '0.9rem' }}>
-              {reel.user}
-            </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
+            <Avatar 
+              src={reel.avatar} 
+              alt={reel.user}
+              sx={{ 
+                width: 40, 
+                height: 40,
+                border: `2px solid ${categoryColor}`,
+                boxShadow: `0 2px 8px ${categoryColor}40`
+              }}
+            />
+            <Box>
+              <Typography 
+                variant="subtitle2" 
+                sx={{ 
+                  fontWeight: 700, 
+                  color: muiTheme.palette.text.primary,
+                  fontSize: '0.95rem'
+                }}
+              >
+                {reel.user}
+              </Typography>
+            </Box>
           </Box>
 
-          <Typography variant="h6" sx={{
-            fontWeight: 800,
-            mb: 0.5,
-            fontSize: '1.1rem',
+          <Typography variant="body1" sx={{
+            fontWeight: 600,
+            mb: 0.75,
             color: muiTheme.palette.text.primary,
-            textShadow: muiTheme.palette.mode === 'dark' ? 'none' : '0 1px 2px rgba(0,0,0,0.05)'
+            fontSize: '0.95rem',
+            lineHeight: 1.4,
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden'
           }}>
             {reel.title}
           </Typography>
@@ -141,39 +225,21 @@ export default function ReelCard({ reel, isHovered, isPlaying, onHover, onLike, 
             })()}
           </Typography>
 
-          <Box sx={{ display: 'flex', gap: 0.5, mb: 1, flexWrap: 'wrap' }}>
-            {reel.tags.map((tag, idx) => (
-              <Chip key={idx} label={tag} size="small" sx={{
-                backgroundColor: `${categoryColor}20`,
-                color: categoryColor,
-                fontSize: '0.7rem',
-                height: '24px',
-                fontWeight: 600,
-                border: `1px solid ${categoryColor}40`,
-                '&:hover': { backgroundColor: `${categoryColor}30` }
-              }} />
-            ))}
-          </Box>
-
-          <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-            <ActionButton
-              icon={isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-              count={reel.likes + (isLiked ? 1 : 0)}
-              onClick={(e) => { e.stopPropagation(); onLike(reel.id); }}
-              isActive={isLiked}
-              color="#ff4757"
-              categoryColor={categoryColor}
-            />
-            <ActionButton
-              icon={<ChatBubbleOutlineIcon />}
-              count={reel.comments}
-              categoryColor={categoryColor}
-            />
-            <ActionButton
-              icon={<ShareIcon />}
-              categoryColor={categoryColor}
-            />
-          </Box>
+          {reel.tags && reel.tags.length > 0 && (
+            <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
+              {reel.tags.map((tag, idx) => (
+                <Chip key={idx} label={tag} size="small" sx={{
+                  backgroundColor: `${categoryColor}20`,
+                  color: categoryColor,
+                  fontSize: '0.7rem',
+                  height: '24px',
+                  fontWeight: 600,
+                  border: `1px solid ${categoryColor}40`,
+                  '&:hover': { backgroundColor: `${categoryColor}30` }
+                }} />
+              ))}
+            </Box>
+          )}
         </Box>
       </Box>
     </Card>

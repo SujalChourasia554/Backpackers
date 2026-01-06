@@ -5,6 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import theme from '@/src/theme';
 
+<<<<<<< Updated upstream
 const FileUploadButton = ({ selectedFile, onFileChange }) => (
   <Button component="label" variant="outlined" fullWidth startIcon={<CloudUploadIcon />} sx={{
     padding: '3rem 2rem',
@@ -29,6 +30,19 @@ const FileUploadButton = ({ selectedFile, onFileChange }) => (
     <input type="file" hidden accept="video/*" onChange={onFileChange} />
   </Button>
 );
+=======
+export default function UploadDialog({ open, onClose, onSuccess }) {
+  const [uploadType, setUploadType] = useState(0);
+  const [formData, setFormData] = useState({
+    userName: '',
+    videoUrl: '',
+    caption: '',
+    location: '',
+    tags: ''
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+>>>>>>> Stashed changes
 
 const VideoPreview = ({ previewUrl }) => (
   previewUrl && (
@@ -52,12 +66,107 @@ export default function UploadDialog({ open, onClose }) {
   };
 
   const handleClose = () => {
+<<<<<<< Updated upstream
     setSelectedFile(null);
     setPreviewUrl(null);
+=======
+    setFormData({ userName: '', videoUrl: '', caption: '', location: '', tags: '' });
+>>>>>>> Stashed changes
     setUploadType(0);
     onClose();
   };
 
+<<<<<<< Updated upstream
+=======
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+      setError('');
+
+      // Validate name
+      if (!formData.userName.trim()) {
+        setError('Please enter your name');
+        setLoading(false);
+        return;
+      }
+
+      // Validate URL
+      if (!formData.videoUrl.trim()) {
+        setError('Please provide a video URL');
+        setLoading(false);
+        return;
+      }
+
+      // Get token from localStorage
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setError('Please login to share moments');
+        setLoading(false);
+        return;
+      }
+
+      const response = await fetch('/api/v1/moments/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          userName: formData.userName.trim(),
+          videoUrl: formData.videoUrl.trim(),
+          caption: formData.caption.trim(),
+          location: formData.location.trim(),
+          tags: formData.tags.trim()
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to create moment');
+      }
+
+      // Success
+      if (onSuccess) {
+        onSuccess(data.moment);
+      }
+      
+      handleClose();
+    } catch (err) {
+      console.error('Error creating moment:', err);
+      setError(err.message || 'Failed to create moment. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getPlaceholder = () => {
+    switch (uploadType) {
+      case 0:
+        return 'https://youtube.com/watch?v=...';
+      case 1:
+        return 'https://drive.google.com/file/d/...';
+      case 2:
+        return 'https://instagram.com/reel/...';
+      default:
+        return '';
+    }
+  };
+
+  const getHelperText = () => {
+    switch (uploadType) {
+      case 0:
+        return 'Paste your YouTube video link here';
+      case 1:
+        return 'Paste your Google Drive video link here (make sure it\'s publicly accessible)';
+      case 2:
+        return 'Paste your Instagram Reel link here';
+      default:
+        return '';
+    }
+  };
+
+>>>>>>> Stashed changes
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
       <DialogTitle sx={{ fontWeight: 700, fontSize: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -76,8 +185,32 @@ export default function UploadDialog({ open, onClose }) {
         </Box>
 
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+<<<<<<< Updated upstream
           <TextField fullWidth label="Video Title" placeholder="Enter a catchy title..." variant="outlined" />
           <TextField fullWidth label="Location" placeholder="Where was this taken?" variant="outlined" />
+=======
+          <TextField 
+            fullWidth 
+            label="Your Name" 
+            placeholder="Enter your name"
+            variant="outlined" 
+            helperText="This will be displayed on your reel"
+            value={formData.userName}
+            onChange={handleChange('userName')}
+            required
+          />
+
+          <TextField 
+            fullWidth 
+            label="Video URL" 
+            placeholder={getPlaceholder()}
+            variant="outlined" 
+            helperText={getHelperText()}
+            value={formData.videoUrl}
+            onChange={handleChange('videoUrl')}
+            required
+          />
+>>>>>>> Stashed changes
           
           {uploadType === 0 ? (
             <Box>

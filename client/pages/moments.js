@@ -11,9 +11,8 @@ import { travelReels } from '@/data/travelReels';
 export default function Moments() {
   const muiTheme = useTheme();
   const [hoveredCard, setHoveredCard] = useState(null);
-  const [playingVideo, setPlayingVideo] = useState(null);
-  const [likedVideos, setLikedVideos] = useState(new Set());
   const [openUploadDialog, setOpenUploadDialog] = useState(false);
+<<<<<<< Updated upstream
 
   const handleVideoHover = (id, isHovering) => {
     setHoveredCard(isHovering ? id : null);
@@ -26,6 +25,60 @@ export default function Moments() {
       newLikes.has(id) ? newLikes.delete(id) : newLikes.add(id);
       return newLikes;
     });
+=======
+  const [moments, setMoments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  const primaryColor = themeConfig.colors.brand.primary;
+
+  // Fetch moments from backend
+  useEffect(() => {
+    fetchMoments();
+  }, []);
+
+  const fetchMoments = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/v1/moments');
+      const data = await response.json();
+      
+      if (data.success) {
+        // Transform backend data to match ReelCard expected format
+        const transformedMoments = data.moments.map(moment => ({
+          id: moment._id,
+          title: moment.caption || 'Travel Moment',
+          location: moment.location || 'Unknown',
+          user: moment.userName || 'Traveler',
+          avatar: `https://i.pravatar.cc/150?u=${moment._id}`,
+          videoUrl: moment.video,
+          thumbnail: `https://images.unsplash.com/photo-${Math.random().toString().slice(2, 15)}?w=800&h=1200&fit=crop&q=80`,
+          likes: moment.likes?.length || 0,
+          comments: moment.comments?.length || 0,
+          tags: moment.tags || [],
+          isLiked: moment.likes?.includes(localStorage.getItem('userId'))
+        }));
+        
+        setMoments(transformedMoments);
+      } else {
+        setError(data.message || 'Failed to fetch moments');
+      }
+    } catch (err) {
+      console.error('Error fetching moments:', err);
+      setError('Failed to load moments. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVideoHover = (id, isHovering) => {
+    setHoveredCard(isHovering ? id : null);
+  };
+
+  const handleUploadSuccess = (newMoment) => {
+    // Refresh moments list
+    fetchMoments();
+>>>>>>> Stashed changes
   };
 
   return (
@@ -50,10 +103,7 @@ export default function Moments() {
                 <ReelCard
                   reel={reel}
                   isHovered={hoveredCard === reel.id}
-                  isPlaying={playingVideo === reel.id}
                   onHover={handleVideoHover}
-                  onLike={toggleLike}
-                  isLiked={likedVideos.has(reel.id)}
                 />
               </Grid>
             ))}

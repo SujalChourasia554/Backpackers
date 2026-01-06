@@ -12,7 +12,67 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+<<<<<<< Updated upstream
     console.log({ email, password });
+=======
+    setError('');
+    setLoading(true);
+
+    try {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
+      const response = await fetch(`${API_BASE_URL}/api/v1/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Handle error responses
+        if (response.status === 400 || response.status === 401) {
+          setError(data.message || 'Invalid email or password');
+          setOpenSnackbar(true);
+        } else {
+          setError(data.message || 'Something went wrong. Please try again.');
+          setOpenSnackbar(true);
+        }
+        setLoading(false);
+        return;
+      }
+
+      // Success - user logged in or OTP sent
+      if (data.token) {
+        // User successfully logged in
+        localStorage.setItem('token', data.token);
+        if (data.user) {
+          localStorage.setItem('user', JSON.stringify(data.user));
+        }
+        // Dispatch event to update navbar
+        window.dispatchEvent(new Event('auth-change'));
+        router.push('/');
+      } else if (data.requiresOTPVerification) {
+        // OTP verification required (new user registration)
+        // Store email in localStorage for signup page
+        localStorage.setItem('pendingEmail', email);
+        router.push('/signup');
+      } else {
+        // Default success case
+        router.push('/');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('Network error. Please check your connection and try again.');
+      setOpenSnackbar(true);
+      setLoading(false);
+    }
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+>>>>>>> Stashed changes
   };
 
   /* ===================== STYLES ===================== */

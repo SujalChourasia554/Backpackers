@@ -1,0 +1,37 @@
+COPY THIS EXACT FORMAT TO YOUR .env FILE:
+================================================
+
+MONGODB_URI=mongodb://localhost:27017/backpackers
+PORT=5001
+RAZORPAY_KEY_ID=rzp_test_your_actual_key_id
+RAZORPAY_KEY_SECRET=ZVTP2uGUn9LSYvIyeTF3e4OQy
+JWT_SECRET=your_jwt_secret_key
+
+================================================
+
+CRITICAL RULES:
+1. NO SPACES before or after the = sign
+2. NO quotes around the values  
+3. Each variable on its own line
+4. Save as .env (not .env.txt)
+
+WRONG FORMAT (DO NOT USE):
+RAZORPAY_KEY_ID = rzp_test_123    ❌ (has spaces)
+RAZORPAY_KEY_SECRET =ZVTP...      ❌ (space before =)
+RAZORPAY_KEY_ID="rzp_test_123"    ❌ (has quotes)
+
+CORRECT FORMAT (USE THIS):
+RAZORPAY_KEY_ID=rzp_test_123      ✅
+RAZORPAY_KEY_SECRET=ZVTP...       ✅
+
+================================================
+
+STEPS TO FIX:
+1. Open server/.env in your editor
+2. Delete ALL contents
+3. Copy the format from the top of this file
+4. Replace "rzp_test_your_actual_key_id" with your real Razorpay Key ID
+5. Keep the RAZORPAY_KEY_SECRET as is (or update if needed)
+6. Save the file
+7. The server will auto-restart and show: ✅ Razorpay initialized
+

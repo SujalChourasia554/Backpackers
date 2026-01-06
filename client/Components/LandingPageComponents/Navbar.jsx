@@ -115,6 +115,142 @@ const Logo = () => (
 export default function Navbar() {
   const muiTheme = useTheme();
   const isDark = muiTheme.palette.mode === 'dark';
+<<<<<<< Updated upstream
+=======
+  const router = useRouter();
+  const [isUserLogin, setIsUserLogin] = useState(false);
+  const [user, setUser] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch user from backend to verify token and get full user data
+  const fetchUserFromBackend = async (token) => {
+    try {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
+      const response = await fetch(`${API_BASE_URL}/api/v1/auth/me`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const userData = data.user;
+        setIsUserLogin(true);
+        setUser(userData);
+        // Update localStorage with fresh data
+        localStorage.setItem('user', JSON.stringify(userData));
+        return true;
+      } else {
+        // Token invalid or expired
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setIsUserLogin(false);
+        setUser(null);
+        return false;
+      }
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      // On error, fall back to localStorage
+      const userData = localStorage.getItem('user');
+      if (userData) {
+        try {
+          setUser(JSON.parse(userData));
+          setIsUserLogin(true);
+        } catch (e) {
+          setIsUserLogin(false);
+          setUser(null);
+        }
+      }
+      return false;
+    }
+  };
+
+  // Check authentication status
+  useEffect(() => {
+    const checkAuth = async () => {
+      setLoading(true);
+      const token = localStorage.getItem('token');
+      
+      if (token) {
+        // Verify token with backend and get full user data
+        await fetchUserFromBackend(token);
+      } else {
+        setIsUserLogin(false);
+        setUser(null);
+      }
+      setLoading(false);
+    };
+
+    // Check on mount
+    checkAuth();
+
+    // Listen for storage changes (e.g., login/logout from another tab)
+    const handleStorageChange = () => {
+      checkAuth();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('auth-change', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('auth-change', handleStorageChange);
+    };
+  }, []);
+
+  const handleAvatarClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setIsUserLogin(false);
+    setUser(null);
+    handleMenuClose();
+    window.dispatchEvent(new Event('auth-change'));
+    router.push('/');
+  };
+
+  const handleProfileClick = () => {
+    handleMenuClose();
+    // Navigate to profile page (you can create this later)
+    router.push('/profile');
+  };
+
+  const appBarStyle = {
+    background: isDark ? 'rgba(20, 25, 30, 0.4)' : 'rgba(255, 255, 255, 0.3)',
+    backdropFilter: 'blur(25px) saturate(180%)',
+    WebkitBackdropFilter: 'blur(25px) saturate(180%)',
+    boxShadow: isDark
+      ? '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08)'
+      : '0 8px 32px rgba(31, 38, 135, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.6)',
+    border: isDark ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid rgba(255, 255, 255, 0.4)',
+    borderRadius: '50px',
+    width: { xs: '96%', sm: '90%', md: '85%', lg: '80%' },
+    maxWidth: '1400px',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    pointerEvents: 'auto',
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      inset: 0,
+      background: isDark
+        ? 'linear-gradient(135deg, rgba(75, 140, 168, 0.1) 0%, rgba(255, 152, 0, 0.05) 100%)'
+        : 'linear-gradient(135deg, rgba(75, 140, 168, 0.05) 0%, rgba(255, 152, 0, 0.03) 100%)',
+      borderRadius: '50px',
+      opacity: 0.5,
+      pointerEvents: 'none',
+    },
+  };
+>>>>>>> Stashed changes
   
   return (
     <Box sx={{
