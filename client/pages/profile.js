@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Box, Container, Typography, Card, CardContent, Button, Chip, Avatar, Divider, Dialog, DialogTitle, DialogContent, DialogActions, useTheme, Grid } from '@mui/material';
-import Navbar from "@Components/customize/Navbar";
 import PersonIcon from '@mui/icons-material/Person';
 import CancelIcon from '@mui/icons-material/Cancel';
 import HistoryIcon from '@mui/icons-material/History';
 import EventIcon from '@mui/icons-material/Event';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import Navbar from '@/Components/LandingPageComponents/Navbar';
 
 export default function Profile() {
     const router = useRouter();
@@ -97,7 +97,7 @@ export default function Profile() {
 
     return (
         <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', pt: 15, pb: 5 }}>
-            <Navbar />
+            <Navbar></Navbar>
             <Container maxWidth="lg">
                 <Card sx={{ mb: 4, bgcolor: 'primary.main', color: 'white' }}>
                     <CardContent>

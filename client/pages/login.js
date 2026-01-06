@@ -55,6 +55,8 @@ export default function Login() {
         router.push('/');
       } else if (data.requiresOTPVerification) {
         // OTP verification required (new user registration)
+        // Store email in localStorage for signup page
+        localStorage.setItem('pendingEmail', email);
         router.push('/signup');
       } else {
         // Default success case
