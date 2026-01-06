@@ -58,6 +58,89 @@ export default function UploadDialog({ open, onClose }) {
     onClose();
   };
 
+<<<<<<< Updated upstream
+=======
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+      setError('');
+
+      // Validate URL
+      if (!formData.videoUrl.trim()) {
+        setError('Please provide a video URL');
+        setLoading(false);
+        return;
+      }
+
+      // Get token from localStorage
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setError('Please login to share moments');
+        setLoading(false);
+        return;
+      }
+
+      const response = await fetch('/api/v1/moments/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          videoUrl: formData.videoUrl.trim(),
+          caption: formData.caption.trim(),
+          location: formData.location.trim(),
+          tags: formData.tags.trim()
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to create moment');
+      }
+
+      // Success
+      if (onSuccess) {
+        onSuccess(data.moment);
+      }
+      
+      handleClose();
+    } catch (err) {
+      console.error('Error creating moment:', err);
+      setError(err.message || 'Failed to create moment. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getPlaceholder = () => {
+    switch (uploadType) {
+      case 0:
+        return 'https://youtube.com/watch?v=...';
+      case 1:
+        return 'https://drive.google.com/file/d/...';
+      case 2:
+        return 'https://instagram.com/reel/...';
+      default:
+        return '';
+    }
+  };
+
+  const getHelperText = () => {
+    switch (uploadType) {
+      case 0:
+        return 'Paste your YouTube video link here';
+      case 1:
+        return 'Paste your Google Drive video link here (make sure it\'s publicly accessible)';
+      case 2:
+        return 'Paste your Instagram Reel link here';
+      default:
+        return '';
+    }
+  };
+
+>>>>>>> Stashed changes
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
       <DialogTitle sx={{ fontWeight: 700, fontSize: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

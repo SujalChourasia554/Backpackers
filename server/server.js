@@ -53,6 +53,11 @@ app.use(require("./routes/recommendationRoutes"));
 // reviewRoutes can be added later
  
  
+<<<<<<< Updated upstream
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
+=======
+app.listen(port, host, () => {
+    console.log(`Server is running on ${host}:${port}`);
+>>>>>>> Stashed changes
 });

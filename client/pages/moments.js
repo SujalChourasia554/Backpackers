@@ -14,18 +14,107 @@ export default function Moments() {
   const [playingVideo, setPlayingVideo] = useState(null);
   const [likedVideos, setLikedVideos] = useState(new Set());
   const [openUploadDialog, setOpenUploadDialog] = useState(false);
+<<<<<<< Updated upstream
+=======
+  const [moments, setMoments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  const primaryColor = themeConfig.colors.brand.primary;
+
+  // Fetch moments from backend
+  useEffect(() => {
+    fetchMoments();
+  }, []);
+
+  const fetchMoments = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/v1/moments');
+      const data = await response.json();
+      
+      if (data.success) {
+        // Transform backend data to match ReelCard expected format
+        const transformedMoments = data.moments.map(moment => ({
+          id: moment._id,
+          title: moment.caption || 'Travel Moment',
+          location: moment.location || 'Unknown',
+          user: moment.userId?.name || 'Anonymous',
+          avatar: `https://i.pravatar.cc/150?u=${moment.userId?._id}`,
+          videoUrl: moment.video,
+          thumbnail: `https://images.unsplash.com/photo-${Math.random().toString().slice(2, 15)}?w=800&h=1200&fit=crop&q=80`,
+          likes: moment.likes?.length || 0,
+          comments: moment.comments?.length || 0,
+          tags: moment.tags || [],
+          isLiked: moment.likes?.includes(localStorage.getItem('userId'))
+        }));
+        
+        setMoments(transformedMoments);
+      } else {
+        setError(data.message || 'Failed to fetch moments');
+      }
+    } catch (err) {
+      console.error('Error fetching moments:', err);
+      setError('Failed to load moments. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  };
+>>>>>>> Stashed changes
 
   const handleVideoHover = (id, isHovering) => {
     setHoveredCard(isHovering ? id : null);
     setPlayingVideo(isHovering ? id : null);
   };
 
+<<<<<<< Updated upstream
   const toggleLike = (id) => {
     setLikedVideos(prev => {
       const newLikes = new Set(prev);
       newLikes.has(id) ? newLikes.delete(id) : newLikes.add(id);
       return newLikes;
     });
+=======
+  const toggleLike = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Please login to like moments');
+        return;
+      }
+
+      const response = await fetch(`/api/v1/moments/${id}/like`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        setLikedVideos(prev => {
+          const newLikes = new Set(prev);
+          data.liked ? newLikes.add(id) : newLikes.delete(id);
+          return newLikes;
+        });
+        
+        // Update the moment's like count
+        setMoments(prev => prev.map(moment => 
+          moment.id === id 
+            ? { ...moment, likes: data.likesCount }
+            : moment
+        ));
+      }
+    } catch (err) {
+      console.error('Error toggling like:', err);
+    }
+  };
+
+  const handleUploadSuccess = (newMoment) => {
+    // Refresh moments list
+    fetchMoments();
+>>>>>>> Stashed changes
   };
 
   return (

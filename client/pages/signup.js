@@ -46,7 +46,76 @@ export default function Signup() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const otpValue = otp.join('');
+<<<<<<< Updated upstream
     console.log('OTP:', otpValue);
+=======
+    
+    if (otpValue.length !== 4) {
+      setError('Please enter a valid 4-digit OTP');
+      setOpenSnackbar(true);
+      return;
+    }
+
+    if (!email) {
+      setError('Email not found. Please try logging in again.');
+      setOpenSnackbar(true);
+      router.push('/login');
+      return;
+    }
+
+    setError('');
+    setLoading(true);
+
+    try {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
+      const response = await fetch(`${API_BASE_URL}/v1/auth/verify-otp`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, otp: otpValue }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Handle error responses
+        if (response.status === 400 || response.status === 401) {
+          setError(data.message || 'Invalid OTP');
+        } else {
+          setError(data.message || 'Something went wrong. Please try again.');
+        }
+        setOpenSnackbar(true);
+        setLoading(false);
+        return;
+      }
+
+      // Success - OTP verified and account created
+      if (data.token) {
+        // Store token and user data
+        localStorage.setItem('token', data.token);
+        if (data.user) {
+          localStorage.setItem('user', JSON.stringify(data.user));
+        }
+        // Remove pending email from localStorage
+        localStorage.removeItem('pendingEmail');
+        // Dispatch event to update navbar
+        window.dispatchEvent(new Event('auth-change'));
+        setLoading(false); // Add this to fix the loading state issue
+        // Redirect to home page
+        router.push('/');
+      }
+    } catch (error) {
+      console.error('OTP verification error:', error);
+      setError('Network error. Please check your connection and try again.');
+      setOpenSnackbar(true);
+      setLoading(false);
+    }
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+>>>>>>> Stashed changes
   };
 
   return (
