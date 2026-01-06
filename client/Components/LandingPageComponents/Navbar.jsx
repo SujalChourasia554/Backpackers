@@ -127,8 +127,8 @@ export default function Navbar() {
   // Fetch user from backend to verify token and get full user data
   const fetchUserFromBackend = async (token) => {
     try {
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
-      const response = await fetch(`${API_BASE_URL}/api/v1/auth/me`, {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
+      const response = await fetch(`${API_BASE_URL}/v1/auth/me`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,

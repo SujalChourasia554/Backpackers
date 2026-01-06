@@ -28,7 +28,7 @@ export default function Itinerary() {
         setLoading(true);
         setError(null);
 
-        const response = await fetch(`http://localhost:5001/api/v1/packages/${packageId}`);
+        const response = await fetch(`/api/v1/packages/${packageId}`);
         
         if (!response.ok) {
           throw new Error('Package not found');
@@ -41,7 +41,7 @@ export default function Itinerary() {
           let destination = null;
           if (data.response.destinationId) {
             try {
-              const destResponse = await fetch(`http://localhost:5001/api/v1/destinations/${data.response.destinationId}`);
+              const destResponse = await fetch(`/api/v1/destination/${data.response.destinationId}`);
               if (destResponse.ok) {
                 destination = (await destResponse.json()).response;
               }

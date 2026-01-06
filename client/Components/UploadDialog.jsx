@@ -50,7 +50,7 @@ export default function UploadDialog({ open, onClose, onSuccess }) {
         return;
       }
 
-      const response = await fetch('http://localhost:5001/api/v1/moments/create', {
+      const response = await fetch('/api/v1/moments/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -25,7 +25,7 @@ export default function Moments() {
   const fetchMoments = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:5001/api/v1/moments');
+      const response = await fetch('/api/v1/moments');
       const data = await response.json();
       
       if (data.success) {
@@ -69,7 +69,7 @@ export default function Moments() {
         return;
       }
 
-      const response = await fetch(`http://localhost:5001/api/v1/moments/${id}/like`, {
+      const response = await fetch(`/api/v1/moments/${id}/like`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`

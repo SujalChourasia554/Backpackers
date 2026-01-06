@@ -30,7 +30,7 @@ export default function ActionButtons({ itineraryId, totalBudget, packageData, c
           console.error("Payment error:", error);
           
           if (error.message === "Failed to load Razorpay SDK" || error.message.includes("fetch")) {
-            alert("Cannot connect to payment server. Please make sure the backend server is running on http://localhost:5001");
+            alert("Cannot connect to payment server. Please try again later.");
           } else {
             alert(`Payment error: ${error.message}`);
           }
