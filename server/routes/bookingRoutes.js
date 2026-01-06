@@ -332,6 +332,45 @@ router.get("/api/v1/booking/:id", requireLogin, async (req, res) => {
 });
 
 // ============================================
+// CANCEL BOOKING
+// ============================================
+// Cancels a booking for the logged-in user
+router.patch("/api/v1/booking/:id/cancel", requireLogin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    if (!isValidObjectId(id)) {
+      return res.status(400).json({ message: "Invalid booking id" });
+    }
+
+    const booking = await Booking.findOne({ _id: id, userId });
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    // Check if booking can be cancelled
+    if (booking.paymentStatus === 'refunded' || booking.paymentStatus === 'failed') {
+      return res.status(400).json({ 
+        message: "Booking is already cancelled or failed" 
+      });
+    }
+
+    // Update booking status to refunded (cancelled)
+    booking.paymentStatus = 'refunded';
+    await booking.save();
+
+    res.status(200).json({
+      message: "Booking cancelled successfully",
+      response: booking
+    });
+  } catch (err) {
+    console.error("Cancel booking error:", err);
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// ============================================
 // EXPORT ROUTER
 // ============================================
 module.exports = router;
