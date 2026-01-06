@@ -225,7 +225,7 @@ export default function Home() {
                   variant="h5"
                   sx={{ fontWeight: 700, mb: 3 }}
                 >
-                  Your 3-Day Plan
+                  Your Day Plan
                 </Typography>
 
                 <Box component="ul" sx={{ listStyle: 'none', p: 0, mb: 3 }}>

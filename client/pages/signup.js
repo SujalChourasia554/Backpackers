@@ -92,11 +92,8 @@ export default function Signup() {
 
       if (!response.ok) {
         // Handle error responses
-        if (response.status === 401) {
-          // OTP verification failed - show "wrong OTP" message
-          setError('wrong OTP');
-        } else if (response.status === 400) {
-          setError(data.message || 'Something went wrong. Please try again.');
+        if (response.status === 400 || response.status === 401) {
+          setError(data.message || 'Invalid OTP');
         } else {
           setError(data.message || 'Something went wrong. Please try again.');
         }
@@ -116,6 +113,7 @@ export default function Signup() {
         localStorage.removeItem('pendingEmail');
         // Dispatch event to update navbar
         window.dispatchEvent(new Event('auth-change'));
+        setLoading(false); // Add this to fix the loading state issue
         // Redirect to home page
         router.push('/');
       }
