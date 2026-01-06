@@ -7,7 +7,6 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import HistoryIcon from '@mui/icons-material/History';
 import EventIcon from '@mui/icons-material/Event';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import Navbar from '@/Components/LandingPageComponents/Navbar';
 
 export default function Profile() {
     const router = useRouter();
