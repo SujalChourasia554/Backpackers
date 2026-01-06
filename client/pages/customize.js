@@ -1,10 +1,15 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+<<<<<<< Updated upstream
 import { Box, Typography, Container, Button, IconButton } from "@mui/material";
 import Navbar from "@/Components/Navbar";
+=======
+import { Box, Typography, Container, Button, IconButton, CircularProgress } from "@mui/material";
+import Navbar from "@/Components/LandingPageComponents/Navbar";
+>>>>>>> Stashed changes
 import themeConfig from "@/src/theme";
 import { hotelOptions, restaurantOptions } from "@/src/data/customization-options";
-import packagesData from "@/src/data/packages";
+import { fetchPackageById } from "@/utils/api";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import BudgetCard from "@/Components/customize/BudgetCard";
 import OptionsGrid from "@/Components/customize/OptionsGrid";
@@ -13,17 +18,80 @@ import ItineraryEditor from "@/Components/customize/ItineraryEditor";
 export default function CustomizePage() {
   const router = useRouter();
   const { itinerary: itineraryId } = router.query;
+  const [packageData, setPackageData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedHotel, setSelectedHotel] = useState(null);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [customizedItinerary, setCustomizedItinerary] = useState(null);
   const [totalBudget, setTotalBudget] = useState(0);
   const [budgetLimit, setBudgetLimit] = useState(0);
 
+  // Fetch package data from MongoDB
+  useEffect(() => {
+    if (!router.isReady || !itineraryId) return;
 
-  const packageData = itineraryId ? packagesData[itineraryId] : null;
+    const fetchPackageData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // Use utility function instead of hardcoded URL
+        const packageData = await fetchPackageById(itineraryId);
+        if (!packageData) throw new Error('Package not found');
+
+        // Transform backend data to match frontend format
+        const pkg = packageData;
+        const defaultItems = packageData.defaultItems || {};
+          
+          // Create itinerary days from package data
+          const totalDays = pkg.totalDays || 3;
+          const itineraryDays = [];
+          
+          for (let i = 1; i <= totalDays; i++) {
+            const dayActivities = [];
+            if (i === 1) {
+              dayActivities.push("Check-in to accommodation");
+              if (defaultItems.activities?.[0]) dayActivities.push(defaultItems.activities[0].name);
+              dayActivities.push("Welcome dinner at local restaurant");
+            } else if (i === totalDays) {
+              if (defaultItems.localGems?.[0]) dayActivities.push(`Visit ${defaultItems.localGems[0].name}`);
+              dayActivities.push("Free time for shopping");
+              dayActivities.push("Departure");
+            } else {
+              const activityIndex = Math.min(i - 1, (defaultItems.activities?.length || 1) - 1);
+              if (defaultItems.activities?.[activityIndex]) dayActivities.push(defaultItems.activities[activityIndex].name);
+            }
+            if (dayActivities.length === 0) dayActivities.push("Explore local attractions");
+            
+            itineraryDays.push({
+              day: i,
+              title: i === 1 ? "Arrival & Exploration" : i === totalDays ? "Leisure & Departure" : `Day ${i} - Main Attractions`,
+              activities: dayActivities
+            });
+          }
+
+          setPackageData({
+            name: pkg.name,
+            budget: `₹${pkg.budgetPerDay?.toLocaleString() || '0'}/day`,
+            budgetPerDay: pkg.budgetPerDay,
+            itineraryDays,
+            totalDays: pkg.totalDays || 3
+          });
+      } catch (err) {
+        console.error('Error fetching package:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPackageData();
+  }, [router.isReady, itineraryId]);
+
   const hotels = (itineraryId && hotelOptions[itineraryId]) || [];
   const restaurants = (itineraryId && restaurantOptions[itineraryId]) || [];
-  const numberOfDays = customizedItinerary?.length || packageData?.itineraryDays?.length || 1;
+  const numberOfDays = customizedItinerary?.length || packageData?.itineraryDays?.length || packageData?.totalDays || 1;
 
   useEffect(() => {
     if (packageData?.budget) {
@@ -196,29 +264,39 @@ export default function CustomizePage() {
 
   if (!router.isReady || !itineraryId) {
     return (
-      <Box sx={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <Typography>Loading...</Typography>
+      <Box sx={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: themeConfig.colors.background.main }}>
+        <Navbar />
+        <CircularProgress />
       </Box>
     );
   }
 
-  if (!packageData) {
-    const availableIds = Object.keys(packagesData).join(', ');
+  if (loading) {
     return (
-      <Box sx={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 2, padding: 3 }}>
-        <Typography variant="h5">Itinerary not found</Typography>
-        <Typography variant="body2" color="text.secondary" textAlign="center">
-          The itinerary "{itineraryId}" could not be found.
-        </Typography>
-        <Typography variant="body2" color="text.secondary" textAlign="center">
-          Available itineraries: {availableIds}
+      <Box sx={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: themeConfig.colors.background.main }}>
+        <Navbar />
+        <Box sx={{ textAlign: "center", mt: 20 }}>
+          <CircularProgress size={60} sx={{ color: themeConfig.colors.primary.main }} />
+          <Typography sx={{ mt: 2, color: themeConfig.colors.text.primary }}>Loading package details...</Typography>
+        </Box>
+      </Box>
+    );
+  }
+
+  if (error || !packageData) {
+    return (
+      <Box sx={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: themeConfig.colors.background.main, flexDirection: "column", gap: 2, padding: 3 }}>
+        <Navbar />
+        <Typography variant="h5" sx={{ color: themeConfig.colors.text.primary }}>Package not found</Typography>
+        <Typography variant="body2" sx={{ color: themeConfig.colors.text.secondary, textAlign: "center" }}>
+          {error || `The package "${itineraryId}" could not be found.`}
         </Typography>
         <Box sx={{ display: 'flex', gap: 2, marginTop: 2 }}>
           <Button variant="outlined" onClick={() => router.back()}>
             Go Back
           </Button>
-          <Button variant="contained" onClick={() => router.push('/')}>
-            Go to Home
+          <Button variant="contained" onClick={() => router.push('/explore')}>
+            Explore Packages
           </Button>
         </Box>
       </Box>

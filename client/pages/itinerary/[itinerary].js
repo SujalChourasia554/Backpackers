@@ -5,6 +5,7 @@ import packagesData from "@/src/data/packages";
 import { hotelOptions, restaurantOptions } from "@/src/data/customization-options";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
+import { fetchPackageById, fetchDestinationById } from "@/utils/api";
 import HeroSection from "@/Components/itinerary/HeroSection";
 import IncludedItemCard from "@/Components/itinerary/IncludedItemCard";
 import DayItem from "@/Components/itinerary/DayItem";
@@ -19,8 +20,69 @@ export default function Itinerary() {
 
   // Redirect if invalid itinerary ID
   useEffect(() => {
+<<<<<<< Updated upstream
     if (router.isReady && itineraryId && !packagesData[itineraryId]) {
       router.replace('/itinerary/goa');
+=======
+    if (!router.isReady || !packageId) return;
+
+    const fetchPackageData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // Use utility function instead of hardcoded URL
+        const packageData = await fetchPackageById(packageId);
+        
+        if (!packageData) {
+          throw new Error('Package not found');
+        }
+
+        // Fetch destination data using utility function
+        let destination = null;
+        if (packageData.destinationId) {
+          destination = await fetchDestinationById(packageData.destinationId);
+        }
+        
+        // Transform backend data to match frontend format
+        const transformedData = transformPackageData(packageData, destination);
+        setPackageData(transformedData);
+      } catch (err) {
+        console.error('Error fetching package:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPackageData();
+  }, [router.isReady, packageId]);
+
+  // Transform backend package data to frontend format
+  const transformPackageData = (backendData, destination = null) => {
+    // Backend returns: { ...packageData, defaultItems }
+    // So backendData contains all package fields at root level + defaultItems
+    const pkg = backendData; // All package fields are at root level
+    const defaultItems = backendData.defaultItems || {};
+    
+    // Create included items from destination items
+    const includedItems = [];
+    
+    // Add hotel/stay - backend returns stays array, take first one
+    if (defaultItems.stays && defaultItems.stays.length > 0) {
+      const stay = defaultItems.stays[0];
+      includedItems.push({
+        title: stay.name,
+        description: [
+          stay.description || "Comfortable accommodation",
+          `Category: ${stay.category || 'Standard'}`,
+          `Budget: ₹${stay.price?.toLocaleString() || '0'}/night`,
+          `Rating: ${stay.rating || 0}/5 (${stay.totalReviews || 0} reviews)`
+        ],
+        image: stay.image?.[0] || "/images/hotel-placeholder.jpg",
+        icon: "🏨"
+      });
+>>>>>>> Stashed changes
     }
   }, [router.isReady, itineraryId, router]);
 

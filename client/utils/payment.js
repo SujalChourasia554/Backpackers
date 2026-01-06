@@ -1,4 +1,5 @@
 // Razorpay Payment Utility Functions
+import { API_BASE_URL } from "./api";
 
 /**
  * Load Razorpay SDK script
@@ -22,7 +23,7 @@ export const createPaymentOrder = async (orderData) => {
 
   console.log("Creating order with amount:", totalBudget);
 
-  const response = await fetch("http://localhost:5001/api/payment/create-order", {
+  const response = await fetch(`${API_BASE_URL}/api/payment/create-order`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -54,7 +55,7 @@ export const createPaymentOrder = async (orderData) => {
  * Verify payment on backend
  */
 export const verifyPayment = async (paymentResponse) => {
-  const verifyResponse = await fetch("http://localhost:5001/api/payment/verify", {
+  const verifyResponse = await fetch(`${API_BASE_URL}/api/payment/verify`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
