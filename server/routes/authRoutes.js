@@ -22,7 +22,7 @@ module.exports = (app) => {
       }
 
       const user = await User.findOne({ email });
-
+      
       // CASE 1: User exists with password - verify password
       if (user && user.password) {
         if (user.password === password) {
