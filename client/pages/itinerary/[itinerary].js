@@ -10,7 +10,6 @@ import IncludedItemCard from "@/Components/itinerary/IncludedItemCard";
 import DayItem from "@/Components/itinerary/DayItem";
 import BudgetSummary from "@/Components/itinerary/BudgetSummary";
 import ActionButtons from "@/Components/itinerary/ActionButtons";
-import { fetchPackageById, fetchDestinationById } from "@/utils/api";
 
 export default function Itinerary() {
   const router = useRouter();
@@ -23,11 +22,6 @@ export default function Itinerary() {
 
   // Fetch package data from MongoDB
   useEffect(() => {
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-    if (router.isReady && itineraryId && !packagesData[itineraryId]) {
-      router.replace('/itinerary/goa');
-=======
     if (!router.isReady || !packageId) return;
 
     const fetchPackageData = async () => {
@@ -35,21 +29,14 @@ export default function Itinerary() {
         setLoading(true);
         setError(null);
 
-<<<<<<< Updated upstream
         // Use utility function instead of hardcoded URL
-=======
->>>>>>> Stashed changes
         const packageData = await fetchPackageById(packageId);
         
         if (!packageData) {
           throw new Error('Package not found');
         }
 
-<<<<<<< Updated upstream
         // Fetch destination data using utility function
-=======
-        // Fetch destination data separately
->>>>>>> Stashed changes
         let destination = null;
         if (packageData.destinationId) {
           destination = await fetchDestinationById(packageData.destinationId);
@@ -58,81 +45,6 @@ export default function Itinerary() {
         // Transform backend data to match frontend format
         const transformedData = transformPackageData(packageData, destination);
         setPackageData(transformedData);
-      } catch (err) {
-        console.error('Error fetching package:', err);
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPackageData();
-  }, [router.isReady, packageId]);
-
-  // Transform backend package data to frontend format
-  const transformPackageData = (backendData, destination = null) => {
-    // Backend returns: { ...packageData, defaultItems }
-    // So backendData contains all package fields at root level + defaultItems
-    const pkg = backendData; // All package fields are at root level
-    const defaultItems = backendData.defaultItems || {};
-    
-    // Create included items from destination items
-    const includedItems = [];
-    
-    // Add hotel/stay - backend returns stays array, take first one
-    if (defaultItems.stays && defaultItems.stays.length > 0) {
-      const stay = defaultItems.stays[0];
-      includedItems.push({
-        title: stay.name,
-        description: [
-          stay.description || "Comfortable accommodation",
-          `Category: ${stay.category || 'Standard'}`,
-          `Budget: ₹${stay.price?.toLocaleString() || '0'}/night`,
-          `Rating: ${stay.rating || 0}/5 (${stay.totalReviews || 0} reviews)`
-        ],
-        image: stay.image?.[0] || "/images/hotel-placeholder.jpg",
-        icon: "🏨"
-      });
->>>>>>> Stashed changes
-    }
-  }, [router.isReady, itineraryId, router]);
-=======
-    if (!router.isReady || !packageId) return;
->>>>>>> ad28d1512a1046f4a0a255ed5da9da05b078e780
-
-    const fetchPackageData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        const response = await fetch(`http://localhost:5001/api/v1/packages/${packageId}`);
-        
-        if (!response.ok) {
-          throw new Error('Package not found');
-        }
-
-        const data = await response.json();
-        
-        if (data.message === "OK" && data.response) {
-          // Fetch destination data separately
-          let destination = null;
-          if (data.response.destinationId) {
-            try {
-              const destResponse = await fetch(`http://localhost:5001/api/v1/destinations/${data.response.destinationId}`);
-              if (destResponse.ok) {
-                destination = (await destResponse.json()).response;
-              }
-            } catch (err) {
-              console.warn('Could not fetch destination:', err);
-            }
-          }
-          
-          // Transform backend data to match frontend format
-          const transformedData = transformPackageData(data.response, destination);
-          setPackageData(transformedData);
-        } else {
-          throw new Error('Invalid package data');
-        }
       } catch (err) {
         console.error('Error fetching package:', err);
         setError(err.message);

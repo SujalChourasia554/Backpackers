@@ -1,25 +1,9 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-import { Box, Typography, Container, Button, IconButton } from "@mui/material";
-<<<<<<< HEAD
-import Navbar from "@/Components/Navbar";
-=======
-=======
->>>>>>> Stashed changes
 import { Box, Typography, Container, Button, IconButton, CircularProgress } from "@mui/material";
 import Navbar from "@/Components/LandingPageComponents/Navbar";
->>>>>>> Stashed changes
-=======
-import Navbar from "@/Components/LandingPageComponents/Navbar";
->>>>>>> ad28d1512a1046f4a0a255ed5da9da05b078e780
 import themeConfig from "@/src/theme";
 import { hotelOptions, restaurantOptions } from "@/src/data/customization-options";
-<<<<<<< Updated upstream
-import { fetchPackageById } from "@/utils/api";
-=======
->>>>>>> Stashed changes
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import BudgetCard from "@/Components/customize/BudgetCard";
 import OptionsGrid from "@/Components/customize/OptionsGrid";
@@ -49,13 +33,9 @@ export default function CustomizePage() {
 
         // Use utility function instead of hardcoded URL
         const packageData = await fetchPackageById(itineraryId);
-<<<<<<< Updated upstream
-        if (!packageData) throw new Error('Package not found');
-=======
         if (!packageData) {
           throw new Error('Package not found');
         }
->>>>>>> Stashed changes
 
         // Transform backend data to match frontend format
         const pkg = packageData;
