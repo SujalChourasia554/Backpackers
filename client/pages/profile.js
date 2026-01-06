@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Box, Container, Typography, Card, CardContent, Button, Chip, Avatar, Divider, Dialog, DialogTitle, DialogContent, DialogActions, useTheme, Grid } from '@mui/material';
-import Navbar from "@Components/customize/Navbar";
+import Navbar from "@Compenents/LandingPageComponents/Navbar";
 import PersonIcon from '@mui/icons-material/Person';
 import CancelIcon from '@mui/icons-material/Cancel';
 import HistoryIcon from '@mui/icons-material/History';
