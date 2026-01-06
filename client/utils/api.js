@@ -17,7 +17,7 @@ export async function fetchDestinationsByCategory(category, limit = 50) {
     };
 
     const backendCategory = categoryMap[category] || category;
-    const response = await fetch(`${API_BASE_URL}/api/v1/destination/category/${encodeURIComponent(backendCategory)}/get`);
+    const response = await fetch(`${API_BASE_URL}/v1/destination/category/${encodeURIComponent(backendCategory)}/get`);
     
     if (!response.ok) {
       throw new Error(`Failed to fetch destinations: ${response.statusText}`);
@@ -44,7 +44,7 @@ export async function fetchAllDestinations(filters = {}) {
     if (filters.state) queryParams.append('state', filters.state);
     if (filters.category) queryParams.append('category', filters.category);
 
-    const url = `${API_BASE_URL}/api/v1/destination/all/get${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
+    const url = `${API_BASE_URL}/v1/destination/all/get${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
     const response = await fetch(url);
     
     if (!response.ok) {
@@ -70,7 +70,7 @@ export async function fetchAllDestinations(filters = {}) {
  */
 export async function fetchDestinationById(destinationId) {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/v1/destination/${destinationId}`);
+    const response = await fetch(`${API_BASE_URL}/v1/destination/${destinationId}`);
     
     if (!response.ok) {
       throw new Error(`Failed to fetch destination: ${response.statusText}`);
@@ -97,7 +97,7 @@ export async function fetchPackagesByDestination(destinationId, filters = {}) {
     if (filters.maxBudget) queryParams.append('maxBudget', filters.maxBudget);
     if (filters.sortBy) queryParams.append('sortBy', filters.sortBy);
 
-    const url = `${API_BASE_URL}/api/v1/packages/destination/${destinationId}${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
+    const url = `${API_BASE_URL}/v1/packages/destination/${destinationId}${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
     const response = await fetch(url);
     
     if (!response.ok) {
@@ -119,7 +119,7 @@ export async function fetchPackagesByDestination(destinationId, filters = {}) {
  */
 export async function fetchPackageById(packageId) {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/v1/packages/${packageId}`);
+    const response = await fetch(`${API_BASE_URL}/v1/packages/${packageId}`);
     
     if (!response.ok) {
       throw new Error(`Failed to fetch package: ${response.statusText}`);
@@ -163,4 +163,3 @@ export async function findDestinationByName(name, category = null) {
     return null;
   }
 }
-
