@@ -223,7 +223,7 @@ export default function Navbar() {
   const handleProfileClick = () => {
     handleMenuClose();
     // Navigate to profile page (you can create this later)
-    // router.push('/profile');
+    router.push('/profile');
   };
 
   const appBarStyle = {

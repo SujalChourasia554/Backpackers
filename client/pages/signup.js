@@ -1,14 +1,29 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { Box, TextField, Button, Typography, Card, Container, IconButton } from '@mui/material';
+import { Box, TextField, Button, Typography, Card, Container, IconButton, Alert, Snackbar } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import theme from '@/src/theme';
 
 export default function Signup() {
   const router = useRouter();
   const [otp, setOtp] = useState(['', '', '', '']);
+  const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
   const inputRefs = [useRef(), useRef(), useRef(), useRef()];
+
+  // Get email from localStorage on component mount
+  useEffect(() => {
+    const pendingEmail = localStorage.getItem('pendingEmail');
+    if (pendingEmail) {
+      setEmail(pendingEmail);
+    } else {
+      // If no email found, redirect back to login
+      router.push('/login');
+    }
+  }, [router]);
 
   const handleOtpChange = (index, value) => {
     if (value.length > 1) return;
@@ -43,10 +58,74 @@ export default function Signup() {
     inputRefs[nextIndex].current.focus();
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const otpValue = otp.join('');
-    console.log('OTP:', otpValue);
+    
+    if (otpValue.length !== 4) {
+      setError('Please enter a valid 4-digit OTP');
+      setOpenSnackbar(true);
+      return;
+    }
+
+    if (!email) {
+      setError('Email not found. Please try logging in again.');
+      setOpenSnackbar(true);
+      router.push('/login');
+      return;
+    }
+
+    setError('');
+    setLoading(true);
+
+    try {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+      const response = await fetch(`${API_BASE_URL}/api/v1/auth/verify-otp`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, otp: otpValue }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Handle error responses
+        if (response.status === 400 || response.status === 401) {
+          setError(data.message || 'Invalid OTP');
+        } else {
+          setError(data.message || 'Something went wrong. Please try again.');
+        }
+        setOpenSnackbar(true);
+        setLoading(false);
+        return;
+      }
+
+      // Success - OTP verified and account created
+      if (data.token) {
+        // Store token and user data
+        localStorage.setItem('token', data.token);
+        if (data.user) {
+          localStorage.setItem('user', JSON.stringify(data.user));
+        }
+        // Remove pending email from localStorage
+        localStorage.removeItem('pendingEmail');
+        // Dispatch event to update navbar
+        window.dispatchEvent(new Event('auth-change'));
+        // Redirect to home page
+        router.push('/');
+      }
+    } catch (error) {
+      console.error('OTP verification error:', error);
+      setError('Network error. Please check your connection and try again.');
+      setOpenSnackbar(true);
+      setLoading(false);
+    }
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
   };
 
   return (
@@ -211,6 +290,25 @@ export default function Signup() {
                 gap: 3,
               }}
             >
+              {error && (
+                <Alert severity="error" sx={{ borderRadius: '10px' }}>
+                  {error}
+                </Alert>
+              )}
+
+              {email && (
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: '#666',
+                    fontSize: '0.875rem',
+                    mb: -2,
+                  }}
+                >
+                  Verifying OTP for: {email}
+                </Typography>
+              )}
+
               <Box
                 sx={{
                   display: 'flex',
@@ -231,6 +329,7 @@ export default function Signup() {
                     onChange={(e) => handleOtpChange(index, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(index, e)}
                     required
+                    disabled={loading}
                     sx={{
                       width: '70px',
                       '& .MuiOutlinedInput-root': {
@@ -263,6 +362,7 @@ export default function Signup() {
                 type="submit"
                 variant="contained"
                 fullWidth
+                disabled={loading}
                 sx={{
                   mt: 5,
                   padding: '16px',
@@ -280,12 +380,23 @@ export default function Signup() {
                   },
                 }}
               >
-                SIGN UP
+                {loading ? 'VERIFYING...' : 'SIGN UP'}
               </Button>
             </Box>
           </Box>
         </Card>
       </Container>
+
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
+          {error}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
