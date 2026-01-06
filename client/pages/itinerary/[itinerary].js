@@ -11,6 +11,7 @@ import IncludedItemCard from "@/Components/itinerary/IncludedItemCard";
 import DayItem from "@/Components/itinerary/DayItem";
 import BudgetSummary from "@/Components/itinerary/BudgetSummary";
 import ActionButtons from "@/Components/itinerary/ActionButtons";
+import { fetchPackageById, fetchDestinationById } from "@/utils/api";
 
 export default function Itinerary() {
   const router = useRouter();
