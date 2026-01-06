@@ -32,14 +32,21 @@ export default function Itinerary() {
         setLoading(true);
         setError(null);
 
+<<<<<<< Updated upstream
         // Use utility function instead of hardcoded URL
+=======
+>>>>>>> Stashed changes
         const packageData = await fetchPackageById(packageId);
         
         if (!packageData) {
           throw new Error('Package not found');
         }
 
+<<<<<<< Updated upstream
         // Fetch destination data using utility function
+=======
+        // Fetch destination data separately
+>>>>>>> Stashed changes
         let destination = null;
         if (packageData.destinationId) {
           destination = await fetchDestinationById(packageData.destinationId);
